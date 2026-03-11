@@ -184,6 +184,56 @@ def test_build_context_combines_memory_sections_into_one_system_message():
     assert "Memory Orb Sync:" in system_messages[0]["content"]
 
 
+def test_build_context_adds_multiple_choice_guidance_block():
+    config = MemoryOrbEngineConfig(
+        context_max_tokens=520,
+        working_max_tokens=120,
+        working_target_tokens=70,
+        max_retrieved_orbs=4,
+    )
+    engine = MemoryOrbEngine(config=config)
+    for idx in range(8):
+        engine.add_turn(
+            "user",
+            (
+                f"Policy note {idx}: visa-free travel and inbound tourism expanded in later years, "
+                "while outbound-only framing is contradicted by the later summaries."
+            ),
+        )
+        engine.add_turn("assistant", "stored acknowledgement")
+
+    packet = engine.build_context(
+        user_query=(
+            "Question:\nWhich option best matches the trend?\n\n"
+            "Options:\n"
+            "A. Outbound travel dominates throughout.\n"
+            "B. Inbound travel and visa-free policy are highlighted.\n"
+            "C. The reports reject any tourism growth.\n"
+            "D. The documents discuss only domestic rail travel."
+        ),
+        system_prompt="You are a policy analyst.",
+    )
+
+    system_text = " ".join(msg["content"] for msg in packet.messages if msg["role"] == "system").lower()
+
+    assert "multiple-choice comparison hints" in system_text
+    assert "do not default to option a" in system_text
+    assert "evidence:" in system_text
+    assert "visa-free" in system_text
+
+
+def test_strip_multiple_choice_options_keeps_question_stem_only():
+    engine = MemoryOrbEngine()
+
+    stripped = engine._strip_multiple_choice_options(
+        "Question:\nWhich approach is approved?\n\nOptions:\nA. Legacy pilot workflow.\nB. Final production workflow."
+    )
+
+    assert "legacy pilot workflow" not in stripped.lower()
+    assert "final production workflow" not in stripped.lower()
+    assert "which approach is approved?" in stripped.lower()
+
+
 def test_selective_attention_uses_recent_pulses_to_retrieve_matching_orbs():
     config = MemoryOrbEngineConfig(
         context_max_tokens=500,

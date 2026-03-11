@@ -199,7 +199,10 @@ def route_structured_reader(
     ]
     for reader in readers:
         if reader.match(working_packet, profile):
-            return profile, reader.answer(working_packet, profile, model)
+            outcome = reader.answer(working_packet, profile, model)
+            if _should_accept_reader_outcome(working_packet, profile, outcome):
+                return profile, outcome
+            return profile, None
     return profile, None
 
 
@@ -366,6 +369,57 @@ def _compose_system_message(*sections: str) -> str:
     return "\n\n".join(cleaned)
 
 
+def _score_option_evidence(packet: QuestionPacket, evidence_lines: Sequence[str]) -> dict[str, float]:
+    question_tokens = _keyword_tokens(packet.question)
+    scores: dict[str, float] = {}
+    for label, option_text in (packet.options or {}).items():
+        option_tokens = _keyword_tokens(option_text)
+        score = 0.0
+        for line in evidence_lines:
+            lowered = line.lower()
+            line_tokens = _keyword_tokens(line)
+            option_overlap = len(option_tokens & line_tokens)
+            question_overlap = len(question_tokens & line_tokens)
+            line_score = (1.45 * option_overlap) + (0.25 * question_overlap)
+            if f"option {label.lower()}" in lowered or f"{label.lower()}." in lowered:
+                line_score += 0.65
+            if any(term in lowered for term in ("supports", "rules out", "contradicts")):
+                line_score += 0.15
+            score = max(score, line_score)
+        scores[label] = round(score, 3)
+    return scores
+
+
+def _select_supported_option(packet: QuestionPacket, evidence_lines: Sequence[str]) -> tuple[str, float, dict[str, float]]:
+    scores = _score_option_evidence(packet, evidence_lines)
+    if not scores:
+        return "", 0.0, {}
+    ranked = sorted(scores.items(), key=lambda item: item[1], reverse=True)
+    best_label, best_score = ranked[0]
+    second_score = ranked[1][1] if len(ranked) > 1 else 0.0
+    if best_score < 1.15 or (best_score - second_score) < 0.35:
+        return "", 0.0, scores
+    confidence = min(0.94, 0.56 + 0.12 * best_score + 0.08 * (best_score - second_score))
+    return best_label, round(confidence, 3), scores
+
+
+def _should_accept_reader_outcome(
+    packet: QuestionPacket,
+    profile: StructureProfile,
+    outcome: ReaderOutcome,
+) -> bool:
+    del packet
+    if not outcome.answer_pred:
+        return False
+    if outcome.deterministic:
+        return True
+    if profile.shape == "table":
+        return outcome.confidence >= 0.72 and bool(outcome.evidence_lines)
+    if profile.shape == "manual":
+        return outcome.confidence >= 0.7 and bool(outcome.evidence_lines)
+    return outcome.confidence >= 0.68
+
+
 class TableReader:
     def __init__(self, token_estimator: TokenEstimator | None = None, max_rows: int = 6000) -> None:
         self.token_estimator = token_estimator or SimpleTokenEstimator()
@@ -416,6 +470,19 @@ class TableReader:
             route_name = "table/compact-summary"
             confidence = 0.62
 
+        heuristic_choice, heuristic_confidence, support_scores = _select_supported_option(packet, evidence_lines)
+        if heuristic_choice and heuristic_confidence >= 0.84:
+            answer_raw = json.dumps({"answer": heuristic_choice})
+            return ReaderOutcome(
+                answer_raw=answer_raw,
+                answer_pred=heuristic_choice,
+                evidence_lines=evidence_lines[:12],
+                route_name=route_name,
+                deterministic=True,
+                confidence=heuristic_confidence,
+                latency_s=round(time.perf_counter() - started, 3),
+            )
+
         answer_raw = model.complete(
             [
                 {
@@ -423,6 +490,8 @@ class TableReader:
                     "content": _compose_system_message(
                         "Answer the multiple-choice question using only the supplied table-derived evidence.\n"
                         "Do not use outside knowledge.\n"
+                        "Compare all options before choosing.\n"
+                        'If the evidence is not discriminative enough, return JSON with {"answer":""}.\n'
                         'Return JSON with one key: answer.',
                         "\n".join(evidence_lines),
                     ),
@@ -430,9 +499,19 @@ class TableReader:
                 {"role": "user", "content": _build_mc_prompt(packet)},
             ]
         )
+        answer_pred = extract_mc_choice(answer_raw)
+        chosen_support = support_scores.get(answer_pred, 0.0) if answer_pred else 0.0
+        if heuristic_choice and heuristic_confidence >= 0.72 and answer_pred != heuristic_choice:
+            answer_raw = json.dumps({"answer": heuristic_choice})
+            answer_pred = heuristic_choice
+            confidence = max(confidence, heuristic_confidence)
+        elif answer_pred and chosen_support < 0.85:
+            answer_raw = ""
+            answer_pred = ""
+            confidence = 0.0
         return ReaderOutcome(
             answer_raw=answer_raw,
-            answer_pred=extract_mc_choice(answer_raw),
+            answer_pred=answer_pred,
             evidence_lines=evidence_lines[:12],
             route_name=route_name,
             deterministic=False,
@@ -1044,18 +1123,16 @@ def _select_manual_answer(question_lower: str, analyses: dict[str, dict[str, Any
     best_score = -10_000.0
     second_best = -10_000.0
     for label, analysis in analyses.items():
-        statuses = [item.get("status", "unresolved") for item in analysis.get("claims", [])]
-        supported = sum(1 for status in statuses if status == "supported")
-        contradicted = sum(1 for status in statuses if status == "contradicted")
-        unresolved = sum(1 for status in statuses if status == "unresolved")
-        score = (2.0 * contradicted - supported - 0.25 * unresolved) if false_question else (2.0 * supported - 2.5 * contradicted - 0.2 * unresolved)
+        score = _score_manual_option(false_question, analysis)
         if score > best_score:
             second_best = best_score
             best_score = score
             best_label = label
         elif score > second_best:
             second_best = score
-    return best_label, bool(best_label and (best_score - second_best) >= 0.8)
+    if not best_label or best_score <= 0.4:
+        return "", False
+    return best_label, bool((best_score - second_best) >= 0.8)
 
 
 def _final_manual_adjudication(model: ModelAdapter, packet: QuestionPacket, analyses: dict[str, dict[str, Any]]) -> str:
@@ -1069,7 +1146,10 @@ def _final_manual_adjudication(model: ModelAdapter, packet: QuestionPacket, anal
             {
                 "role": "system",
                 "content": _compose_system_message(
-                    'Choose the best multiple-choice answer using only the claim matrix below. Return JSON with one key: answer.',
+                    "Choose the best multiple-choice answer using only the claim matrix below.\n"
+                    "Compare all options before choosing and do not default to option A.\n"
+                    'If the matrix is too unresolved to justify a choice, return JSON with {"answer":""}.\n'
+                    'Return JSON with one key: answer.',
                     "\n".join(lines),
                 ),
             },
@@ -1083,9 +1163,20 @@ def _estimate_manual_confidence(choice: str, analyses: dict[str, dict[str, Any]]
     if not choice or choice not in analyses:
         return 0.0
     statuses = [item.get("status", "unresolved") for item in analyses[choice].get("claims", [])]
+    unresolved = sum(1 for status in statuses if status == "unresolved")
+    decisive = sum(1 for status in statuses if status in {"supported", "contradicted"})
+    confidence = 0.34 + (0.2 * decisive) - (0.06 * unresolved)
+    return round(max(0.0, min(0.95, confidence)), 3)
+
+
+def _score_manual_option(false_question: bool, analysis: dict[str, Any]) -> float:
+    statuses = [item.get("status", "unresolved") for item in analysis.get("claims", [])]
     supported = sum(1 for status in statuses if status == "supported")
     contradicted = sum(1 for status in statuses if status == "contradicted")
-    return round(min(0.95, 0.45 + 0.12 * supported + 0.08 * contradicted), 3)
+    unresolved = sum(1 for status in statuses if status == "unresolved")
+    if false_question:
+        return (2.0 * contradicted) - supported - (0.35 * unresolved)
+    return (2.0 * supported) - (2.5 * contradicted) - (0.35 * unresolved)
 
 
 def _json_load_loose(raw: str) -> Any:

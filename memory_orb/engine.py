@@ -560,28 +560,32 @@ class MemoryOrbEngine:
         semantic_budget = int(retrieval_budget * self.config.semantic_budget_ratio)
         orb_budget = max(0, retrieval_budget - semantic_budget)
 
-        query_anchors = self._expand_anchors(extract_anchors(user_query))
+        retrieval_query = self._strip_multiple_choice_options(user_query)
+        query_anchors = self._expand_anchors(extract_anchors(retrieval_query or user_query))
         focus_block, focus_tokens, focus_anchors = self._build_focus_block(query_anchors, focus_budget)
 
         semantic_cards = self._select_semantic_cards(query_anchors, focus_anchors, semantic_budget)
         semantic_tokens = sum(card.tokens for card in semantic_cards)
 
         selected_orbs = self._retrieve_orbs(
-            user_query=user_query,
+            user_query=retrieval_query or user_query,
             query_anchors=query_anchors,
             focus_anchors=focus_anchors,
             budget_tokens=max(0, orb_budget),
         )
 
+        mc_block = self._build_multiple_choice_evidence_block(user_query, selected_orbs)
         memory_block = self._format_memory_block(semantic_cards, selected_orbs)
         memory_tokens = self.token_estimator.count(memory_block) if memory_block else 0
         memory_tokens += focus_tokens
+        if mc_block:
+            memory_tokens += self.token_estimator.count(mc_block)
 
         recent_turns = self._select_recent_turns(budget_tokens=recent_budget)
         recent_tokens = sum(turn.tokens for turn in recent_turns)
 
         messages: list[dict[str, str]] = []
-        system_block = self._compose_system_message([system_prompt, focus_block, memory_block])
+        system_block = self._compose_system_message([system_prompt, focus_block, mc_block, memory_block])
         if system_block:
             messages.append({"role": "system", "content": system_block})
         for turn in recent_turns:
@@ -1152,8 +1156,9 @@ class MemoryOrbEngine:
 
     def _build_question_profile(self, question: str) -> dict[str, Any]:
         clean = " ".join((question or "").split())
-        lower = clean.lower()
-        anchors = self._expand_anchors(extract_anchors(clean, max_anchors=18), max_items=30)
+        stem = " ".join(self._strip_multiple_choice_options(question).split()) or clean
+        lower = stem.lower()
+        anchors = self._expand_anchors(extract_anchors(stem, max_anchors=18), max_items=30)
 
         target_record = ""
         for pattern in (r"\brecord\s*=\s*([a-z0-9._\-]+)", r"\brecord\s+([a-z0-9._\-]+)"):
@@ -1216,6 +1221,97 @@ class MemoryOrbEngine:
             if label in {"A", "B", "C", "D"} and text:
                 options[label] = text
         return options
+
+    def _strip_multiple_choice_options(self, question: str) -> str:
+        raw = (question or "").strip()
+        if not raw:
+            return ""
+        if not self._extract_multiple_choice_options(raw):
+            return raw
+        kept_lines: list[str] = []
+        option_block_started = False
+        for line in raw.splitlines():
+            stripped = line.strip()
+            if not stripped:
+                if not option_block_started:
+                    kept_lines.append("")
+                continue
+            if stripped.lower() == "options:":
+                option_block_started = True
+                continue
+            if self._MC_OPTION_RE.match(stripped):
+                option_block_started = True
+                continue
+            kept_lines.append(line.rstrip())
+        collapsed = "\n".join(line for line in kept_lines).strip()
+        return collapsed or raw
+
+    def _build_multiple_choice_evidence_block(self, question: str, orbs: list[MemoryOrb]) -> str:
+        options = self._extract_multiple_choice_options(question)
+        if len(options) < 2 or not orbs:
+            return ""
+        stem = self._strip_multiple_choice_options(question)
+        stem_anchors = self._expand_anchors(extract_anchors(stem, max_anchors=14), max_items=18)
+        lines = [
+            "Multiple-choice comparison hints:",
+            "- Compare every option against the retrieved memory before choosing.",
+            "- Do not default to option A when the evidence is weak or tied.",
+        ]
+        for label, option_text in sorted(options.items()):
+            evidence = self._collect_option_evidence_lines(
+                stem=stem,
+                stem_anchors=stem_anchors,
+                option_text=option_text,
+                orbs=orbs,
+                max_lines=1,
+            )
+            if evidence:
+                lines.append(f"- {label}. {option_text}")
+                for item in evidence:
+                    lines.append(f"  - evidence: {item}")
+            else:
+                lines.append(f"- {label}. {option_text}")
+                lines.append("  - evidence: no direct option-specific memory evidence retrieved")
+        return "\n".join(lines)
+
+    def _collect_option_evidence_lines(
+        self,
+        stem: str,
+        stem_anchors: list[str],
+        option_text: str,
+        orbs: list[MemoryOrb],
+        max_lines: int = 1,
+    ) -> list[str]:
+        del stem
+        option_anchors = self._expand_anchors(extract_anchors(option_text, max_anchors=10), max_items=16)
+        if not option_anchors:
+            return []
+        anchors = self._merge_anchors(stem_anchors, option_anchors, max_items=34)
+        option_set = set(option_anchors)
+        stem_set = set(stem_anchors)
+        ranked: list[tuple[float, str]] = []
+        for orb in orbs:
+            facts = self._extract_fact_lines_from_text(
+                text=f"{orb.raw_excerpt}\n{orb.summary}",
+                anchors=anchors,
+                max_lines=2,
+            )
+            for fact in facts:
+                lowered = fact.lower()
+                option_overlap = sum(1 for anchor in option_set if anchor in lowered)
+                stem_overlap = sum(1 for anchor in stem_set if anchor in lowered)
+                score = (1.35 * option_overlap) + (0.35 * stem_overlap) + (0.22 * orb.salience)
+                if score <= 0.0:
+                    continue
+                ranked.append((score, fact))
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        selected: list[str] = []
+        for _, line in ranked:
+            if line not in selected:
+                selected.append(line)
+            if len(selected) >= max(1, max_lines):
+                break
+        return selected
 
     def _is_comparative_question(self, question: str) -> bool:
         lower = (question or "").lower()

@@ -62,6 +62,26 @@ class _ManualEvalModel:
         return '{"claims":["fallback"]}'
 
 
+class _ManualUnresolvedModel:
+    def complete(self, messages: list[dict[str, str]]) -> str:
+        if "overall_status" in messages[0]["content"]:
+            return json.dumps(
+                {
+                    "claims": [
+                        {
+                            "claim": "fallback claim",
+                            "status": "unresolved",
+                            "evidence": "",
+                        }
+                    ],
+                    "overall_status": "unresolved",
+                }
+            )
+        if "claim matrix" in messages[0]["content"].lower():
+            return '{"answer":"A"}'
+        return '{"claims":["fallback claim"]}'
+
+
 def _country_frequency_packet() -> QuestionPacket:
     return QuestionPacket(
         question="Which two countries are the second and third frequently mentioned among all these organization addresses?",
@@ -246,6 +266,36 @@ def test_table_reader_uses_single_system_message_for_model_call():
     assert "table-derived evidence" in system_messages[0]["content"].lower()
 
 
+def test_route_structured_reader_falls_back_when_table_evidence_is_not_discriminative():
+    packet = QuestionPacket(
+        question="Which explanation best matches the document?",
+        options={
+            "A": "A manufacturing strike halted ports.",
+            "B": "A rate cut boosted retail lending.",
+            "C": "Wildfire smoke disrupted tourism flights.",
+            "D": "A mining shutdown cut cobalt supply.",
+        },
+        raw_context="\n".join(
+            [
+                "section,title,excerpt",
+                "1,Novel excerpt,The train crossed the valley while dusk settled over the hills.",
+                "2,Novel excerpt,Her voice trembled as she read the final telegram aloud.",
+                "3,Novel excerpt,No one in the carriage noticed the conductor's hesitation.",
+                "4,Novel excerpt,The station clock echoed across the platform in the rain.",
+                "5,Novel excerpt,He folded the letter and stared at the blue lamp by the window.",
+                "6,Novel excerpt,The night porter whispered that the last compartment was empty.",
+                "7,Novel excerpt,Their conversation drifted back to the unsolved disappearance.",
+                "8,Novel excerpt,By sunrise the mystery seemed larger than the railway itself.",
+            ]
+        ),
+    )
+
+    profile, outcome = route_structured_reader(packet=packet, model=_FixedModel('{"answer":"A"}'))
+
+    assert profile.shape == "table"
+    assert outcome is None
+
+
 def test_parse_manual_sections_and_parameter_records():
     sections = _parse_manual_sections(_manual_packet().raw_context)
     parameters = _extract_parameter_records(sections)
@@ -275,6 +325,15 @@ def test_procedure_reader_finds_false_option_for_case_66ec4370821e116aacb1c905()
     assert outcome.route_name == "manual/claim-matrix"
     assert outcome.answer_pred == "B"
     assert any(line.startswith("B: overall=") for line in outcome.evidence_lines)
+
+
+def test_route_structured_reader_falls_back_when_manual_claims_are_unresolved():
+    packet = _manual_packet()
+
+    profile, outcome = route_structured_reader(packet=packet, model=_ManualUnresolvedModel())
+
+    assert profile.shape == "manual"
+    assert outcome is None
 
 
 def test_manual_final_adjudication_uses_single_system_message():
