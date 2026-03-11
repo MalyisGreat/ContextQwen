@@ -72,6 +72,18 @@ class PilotBiasModel(ModelAdapter):
         return '{"answer":"MNT-FLOW-246"}'
 
 
+class ScorecardModel(ModelAdapter):
+    def complete(self, messages):
+        return "\n".join(
+            [
+                "A: 0.14 contradicted",
+                "B: 0.88 supported",
+                "C: 0.22 weak",
+                "D: 0.17 weak",
+            ]
+        )
+
+
 def test_context_size_is_bounded_during_long_run():
     config = MemoryOrbEngineConfig(
         context_max_tokens=520,
@@ -763,6 +775,24 @@ def test_answer_document_uses_single_system_message_for_backend_compatibility():
     assert len(system_messages) == 1
     assert "You are a factual QA assistant." in system_messages[0]["content"]
     assert "Answer Document:" in system_messages[0]["content"]
+
+
+def test_answer_document_parses_plain_text_multiple_choice_scorecard():
+    engine = MemoryOrbEngine()
+
+    result = engine.answer_with_answer_document(
+        model=ScorecardModel(),
+        question=(
+            "Question:\nWhich policy is supported?\n\n"
+            "Options:\n"
+            "A. Legacy pilot workflow.\n"
+            "B. Final production workflow.\n"
+            "C. Deferred rollback.\n"
+            "D. External escalation."
+        ),
+    )
+
+    assert result.answer == "B"
 
 
 def test_semantic_cards_skip_mutable_fact_summaries():

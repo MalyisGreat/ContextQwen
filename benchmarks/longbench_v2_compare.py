@@ -19,12 +19,12 @@ from benchmarks.api_backend import chat_completion
 from memory_orb import MemoryOrbEngine
 from memory_orb import MemoryOrbEngineConfig
 from memory_orb.adapters import ModelAdapter
+from memory_orb.mcq import build_multiple_choice_question_block, build_scorecard_instruction_block
+from memory_orb.mcq import extract_mc_choice as extract_choice_from_text
 from memory_orb.structured_readers import QuestionPacket, ReaderOutcome, StructureProfile
 from memory_orb.structured_readers import profile_structure as _profile_structure
 from memory_orb.structured_readers import route_structured_reader
 
-
-CHOICE_RE = re.compile(r"\b([ABCD])\b", flags=re.IGNORECASE)
 _STOPWORDS = {
     "a",
     "an",
@@ -123,6 +123,12 @@ class BenchResult:
     route_profile_confidence: float = 0.0
     deterministic_reader_used: int = 0
     reader_evidence_excerpt: str = ""
+    direct_permuted_pred: str = ""
+    direct_permuted_mapped_pred: str = ""
+    direct_same_letter_after_permutation: int = 0
+    memory_permuted_pred: str = ""
+    memory_permuted_mapped_pred: str = ""
+    memory_same_letter_after_permutation: int = 0
 
 
 @dataclass(slots=True)
@@ -149,6 +155,48 @@ def _build_question_packet(case: BenchCase) -> QuestionPacket:
     )
 
 
+def _permute_case_labels(case: BenchCase, seed_token: str) -> tuple[BenchCase, dict[str, str]]:
+    rng = random.Random(seed_token)
+    original_labels = ["A", "B", "C", "D"]
+    shuffled_labels = original_labels[:]
+    for _ in range(6):
+        rng.shuffle(shuffled_labels)
+        if shuffled_labels != original_labels:
+            break
+    else:
+        shuffled_labels = ["B", "C", "D", "A"]
+
+    option_texts = {
+        "A": case.choice_a,
+        "B": case.choice_b,
+        "C": case.choice_c,
+        "D": case.choice_d,
+    }
+    permuted_to_original = {new_label: old_label for new_label, old_label in zip(original_labels, shuffled_labels)}
+    original_to_permuted = {old_label: new_label for new_label, old_label in permuted_to_original.items()}
+    return (
+        BenchCase(
+            case_id=case.case_id,
+            length=case.length,
+            difficulty=case.difficulty,
+            domain=case.domain,
+            sub_domain=case.sub_domain,
+            question=case.question,
+            context=case.context,
+            choice_a=option_texts[permuted_to_original["A"]],
+            choice_b=option_texts[permuted_to_original["B"]],
+            choice_c=option_texts[permuted_to_original["C"]],
+            choice_d=option_texts[permuted_to_original["D"]],
+            answer=original_to_permuted[case.answer],
+        ),
+        permuted_to_original,
+    )
+
+
+def _map_permuted_choice(choice: str, permuted_to_original: dict[str, str]) -> str:
+    return permuted_to_original.get(choice.upper(), "") if choice else ""
+
+
 def _progress_bar(done: int, total: int, width: int = 28) -> str:
     if total <= 0:
         return "[" + ("-" * width) + "]"
@@ -163,17 +211,18 @@ def _compose_system_message(*sections: str) -> str:
 
 
 def _build_mc_prompt(case: BenchCase) -> str:
-    return _build_mc_question_block(case) + '\n\nReturn JSON only: {"answer":"A"} or B/C/D. Return one letter only.'
+    return _build_mc_question_block(case) + "\n\n" + build_scorecard_instruction_block()
 
 
 def _build_mc_question_block(case: BenchCase) -> str:
-    return (
-        f"Question:\n{case.question}\n\n"
-        "Options:\n"
-        f"A. {case.choice_a}\n"
-        f"B. {case.choice_b}\n"
-        f"C. {case.choice_c}\n"
-        f"D. {case.choice_d}"
+    return build_multiple_choice_question_block(
+        case.question,
+        {
+            "A": case.choice_a,
+            "B": case.choice_b,
+            "C": case.choice_c,
+            "D": case.choice_d,
+        },
     )
 
 
@@ -193,37 +242,7 @@ def _route_structured_memory_case(
 
 
 def _extract_choice(raw: str) -> str:
-    text = (raw or "").strip()
-    if not text:
-        return ""
-
-    if text.startswith("{") and text.endswith("}"):
-        try:
-            parsed = json.loads(text)
-            if isinstance(parsed, dict):
-                for key in ("answer", "choice", "option", "value", "result"):
-                    value = parsed.get(key)
-                    if value is not None:
-                        match = CHOICE_RE.search(str(value))
-                        if match:
-                            return match.group(1).upper()
-        except Exception:
-            pass
-
-    explicit = re.search(r"(?i)\b(?:answer|choice|option)\s*[:=]\s*['\"]?\s*([ABCD])\b", text)
-    if explicit:
-        return explicit.group(1).upper()
-
-    stripped = text.strip().upper()
-    if stripped in {"A", "B", "C", "D"}:
-        return stripped
-
-    # Avoid accidental extraction from long echoed context/options blobs.
-    if len(text) <= 40:
-        matches = CHOICE_RE.findall(text)
-        if matches:
-            return matches[-1].upper()
-    return ""
+    return extract_choice_from_text(raw)
 
 
 def _chunk_text(text: str, chunk_chars: int = 1400) -> list[str]:
@@ -417,19 +436,14 @@ def _run_table_memory_case(
     deterministic = _try_answer_table_rank_question(case, headers, rows)
     if deterministic:
         return deterministic, len(rows)
-    schema = {
-        "type": "object",
-        "properties": {"answer": {"type": "string", "enum": ["A", "B", "C", "D"]}},
-        "required": ["answer"],
-    }
     adapter = _OllamaAdapter(
         model_name=model,
         num_ctx=memory_ctx,
         timeout_s=timeout_s,
-        response_schema=schema,
+        response_schema=None,
     )
     summary = _build_table_summary(case, headers, rows)
-    prompt = _build_mc_prompt(case)
+    prompt = _build_mc_question_block(case)
     answer = adapter.complete(
         [
             {
@@ -437,7 +451,7 @@ def _run_table_memory_case(
                 "content": _compose_system_message(
                     "Answer the multiple-choice question using only the compact table view.\n"
                     "Treat the first line as the table header.\n"
-                    "Return JSON only with one key: answer (A/B/C/D).",
+                    "Score each option separately from the compact table view.",
                     summary,
                 ),
             },
@@ -494,18 +508,14 @@ def _run_direct_case(
     timeout_s: int,
     backend: ChatBackendConfig,
 ) -> str:
-    schema = {
-        "type": "object",
-        "properties": {"answer": {"type": "string", "enum": ["A", "B", "C", "D"]}},
-        "required": ["answer"],
-    }
-    prompt = _build_mc_prompt(case)
+    prompt = _build_mc_question_block(case)
     messages = [
         {
             "role": "system",
             "content": (
                 "Read the long context and answer the multiple-choice question.\n"
-                "Return strict JSON with one key: answer, where value is exactly one of A/B/C/D."
+                "Score each option separately from the context.\n"
+                "Do not use outside knowledge."
             ),
         },
         {"role": "user", "content": f"Context:\n{case.context}\n\n{prompt}"},
@@ -525,8 +535,7 @@ def _run_direct_case(
                 messages=messages,
                 num_ctx=ctx,
                 timeout_s=timeout_s,
-                json_mode=True,
-                response_schema=schema,
+                json_mode=False,
             )
         except RuntimeError as err:
             last_error = str(err)
@@ -542,6 +551,7 @@ class _ChatAdapter(ModelAdapter):
         timeout_s: int,
         backend: ChatBackendConfig,
         response_schema: dict[str, Any] | None = None,
+        json_mode: bool | None = None,
         reasoning_num_predict: int = 192,
         enable_think: bool = False,
     ) -> None:
@@ -550,6 +560,7 @@ class _ChatAdapter(ModelAdapter):
         self.timeout_s = timeout_s
         self.backend = backend
         self.response_schema = response_schema
+        self.json_mode = bool(response_schema) if json_mode is None else bool(json_mode)
         self.reasoning_num_predict = reasoning_num_predict
         self.enable_think = enable_think
 
@@ -560,7 +571,7 @@ class _ChatAdapter(ModelAdapter):
             messages=messages,
             num_ctx=self.num_ctx,
             timeout_s=self.timeout_s,
-            json_mode=True,
+            json_mode=self.json_mode,
             response_schema=self.response_schema,
         )
 
@@ -748,7 +759,7 @@ def _build_reasoned_chat_supplement(
     reasoning_num_predict: int,
     enable_ollama_think: bool,
 ) -> str:
-    prompt = _build_mc_prompt(case)
+    prompt = _build_mc_question_block(case)
     scratch_engine = _build_memory_engine(memory_ctx=memory_ctx, answer_dwell_mode="reasoned")
     _ingest_benchmark_context(scratch_engine, case.context, chunk_chars=chunk_chars)
     dwell_adapter = _ChatAdapter(
@@ -857,7 +868,7 @@ def _adjudicate_from_probe_notes(adapter: _ChatAdapter, prompt: str, supplement:
                     "Use only the option-specific probe notes to choose the best answer.\n"
                     "Prefer the option with the most explicit claim-matching evidence.\n"
                     "Ignore generic disclosures, metadata, and boilerplate.\n"
-                    "Return JSON only with one key: answer (A/B/C/D).",
+                    "Score each option separately from the probe notes.",
                     supplement,
                 ),
             },
@@ -907,12 +918,8 @@ def _run_memory_case(
 ) -> _MemoryRunOutcome:
     packet = _build_question_packet(case)
     packet_profile = _profile_structure(packet)
-    schema = {
-        "type": "object",
-        "properties": {"answer": {"type": "string", "enum": ["A", "B", "C", "D"]}},
-        "required": ["answer"],
-    }
     prompt = _build_mc_prompt(case)
+    question_block = _build_mc_question_block(case)
     main_dwell_mode = "heuristic" if memory_answer_mode == "reasoned-chat" else memory_dwell_mode
     engine = _build_memory_engine(memory_ctx=memory_ctx, answer_dwell_mode=main_dwell_mode)
     chunk_count = _ingest_benchmark_context(engine, case.context, chunk_chars=chunk_chars)
@@ -921,7 +928,7 @@ def _run_memory_case(
         num_ctx=memory_ctx,
         timeout_s=timeout_s,
         backend=backend,
-        response_schema=schema,
+        response_schema=None,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
     )
@@ -963,13 +970,12 @@ def _run_memory_case(
         result = engine.answer_with_answer_document(
             model=adapter,
             dwell_model=dwell_adapter if memory_dwell_mode == "reasoned" else None,
-            question=prompt,
+            question=question_block,
             passes=4,
             per_pass_orbs=4,
             answer_doc_max_tokens=max(256, int(memory_ctx * 0.7)),
             system_prompt=(
-                "Use only the answer document evidence to answer the multiple-choice question.\n"
-                "Return JSON only with one key: answer (A/B/C/D)."
+                "Use only the answer document evidence to evaluate the multiple-choice question."
             ),
             allow_answer_coercion=False,
         )
@@ -977,7 +983,8 @@ def _run_memory_case(
     elif memory_answer_mode == "reasoned-chat":
         system_prompt = (
             "Use memory context and answer the multiple-choice question.\n"
-            "Return JSON only with one key: answer (A/B/C/D)."
+            "Score each option separately from the retrieved memory.\n"
+            + build_scorecard_instruction_block()
         )
         if _should_route_reasoned_chat(packet, packet_profile):
             supplement = _build_option_probe_supplement(
@@ -1008,22 +1015,23 @@ def _run_memory_case(
             else:
                 answer, _ = engine.chat(
                     model=adapter,
-                    user_text=prompt,
+                    user_text=question_block + "\n\n" + build_scorecard_instruction_block(),
                     system_prompt=system_prompt,
                 )
         else:
             answer, _ = engine.chat(
                 model=adapter,
-                user_text=prompt,
+                user_text=question_block + "\n\n" + build_scorecard_instruction_block(),
                 system_prompt=system_prompt,
             )
     else:
         answer, _ = engine.chat(
             model=adapter,
-            user_text=prompt,
+            user_text=question_block + "\n\n" + build_scorecard_instruction_block(),
             system_prompt=(
                 "Use memory context and answer the multiple-choice question.\n"
-                "Return JSON only with one key: answer (A/B/C/D)."
+                "Score each option separately from the retrieved memory.\n"
+                + build_scorecard_instruction_block()
             ),
         )
     return _MemoryRunOutcome(
@@ -1055,6 +1063,7 @@ def run_compare(
     reasoning_num_predict: int = 192,
     enable_ollama_think: bool = False,
     difficulty_filter: set[str] | None = None,
+    permutation_audit: bool = False,
     show_progress: bool = True,
 ) -> dict[str, Any]:
     cases = _select_cases(
@@ -1104,6 +1113,12 @@ def run_compare(
         route_profile_confidence = 0.0
         deterministic_reader_used = 0
         reader_evidence_excerpt = ""
+        direct_permuted_pred = ""
+        direct_permuted_mapped_pred = ""
+        direct_same_letter_after_permutation = 0
+        memory_permuted_pred = ""
+        memory_permuted_mapped_pred = ""
+        memory_same_letter_after_permutation = 0
         try:
             memory_started = time.perf_counter()
             memory_run = _run_memory_case(
@@ -1134,6 +1149,43 @@ def run_compare(
             memory_error = str(err)
         memory_latencies.append(memory_latency_s)
 
+        if permutation_audit:
+            permuted_case, permuted_to_original = _permute_case_labels(case, f"{seed}:{case.case_id}")
+            try:
+                direct_permuted_raw = _run_direct_case(
+                    case=permuted_case,
+                    model=long_model,
+                    direct_ctx=direct_ctx,
+                    timeout_s=timeout_s,
+                    backend=backend,
+                )
+                direct_permuted_pred = _extract_choice(direct_permuted_raw)
+                direct_permuted_mapped_pred = _map_permuted_choice(direct_permuted_pred, permuted_to_original)
+                direct_same_letter_after_permutation = int(bool(direct_pred) and direct_permuted_pred == direct_pred)
+            except Exception:
+                direct_permuted_pred = ""
+                direct_permuted_mapped_pred = ""
+            try:
+                memory_permuted_run = _run_memory_case(
+                    case=permuted_case,
+                    model=memory_model,
+                    memory_ctx=memory_ctx,
+                    timeout_s=timeout_s,
+                    chunk_chars=chunk_chars,
+                    memory_answer_mode=memory_answer_mode,
+                    memory_dwell_mode=memory_dwell_mode,
+                    reasoning_dwell_ctx=reasoning_dwell_ctx,
+                    backend=backend,
+                    reasoning_num_predict=reasoning_num_predict,
+                    enable_ollama_think=enable_ollama_think,
+                )
+                memory_permuted_pred = _extract_choice(memory_permuted_run.answer_raw)
+                memory_permuted_mapped_pred = _map_permuted_choice(memory_permuted_pred, permuted_to_original)
+                memory_same_letter_after_permutation = int(bool(memory_pred) and memory_permuted_pred == memory_pred)
+            except Exception:
+                memory_permuted_pred = ""
+                memory_permuted_mapped_pred = ""
+
         results.append(
             BenchResult(
                 case_id=case.case_id,
@@ -1159,6 +1211,12 @@ def run_compare(
                 route_profile_confidence=route_profile_confidence,
                 deterministic_reader_used=deterministic_reader_used,
                 reader_evidence_excerpt=reader_evidence_excerpt,
+                direct_permuted_pred=direct_permuted_pred,
+                direct_permuted_mapped_pred=direct_permuted_mapped_pred,
+                direct_same_letter_after_permutation=direct_same_letter_after_permutation,
+                memory_permuted_pred=memory_permuted_pred,
+                memory_permuted_mapped_pred=memory_permuted_mapped_pred,
+                memory_same_letter_after_permutation=memory_same_letter_after_permutation,
             )
         )
 
@@ -1185,6 +1243,8 @@ def run_compare(
     memory_acc = statistics.mean(row.memory_correct for row in results) if results else 0.0
     direct_errors = sum(1 for row in results if row.direct_error)
     memory_errors = sum(1 for row in results if row.memory_error)
+    direct_perm_rows = [row for row in results if row.direct_permuted_pred]
+    memory_perm_rows = [row for row in results if row.memory_permuted_pred]
 
     return {
         "benchmark": "THUDM/LongBench-v2",
@@ -1202,6 +1262,7 @@ def run_compare(
         "reasoning_dwell_ctx": reasoning_dwell_ctx if memory_dwell_mode == "reasoned" else None,
         "reasoning_num_predict": reasoning_num_predict if memory_answer_mode == "reasoned-chat" or memory_dwell_mode == "reasoned" else None,
         "enable_ollama_think": bool(enable_ollama_think),
+        "permutation_audit_enabled": bool(permutation_audit),
         "memory_ctx": memory_ctx,
         "direct_ctx": direct_ctx,
         "chunk_chars": chunk_chars,
@@ -1210,6 +1271,30 @@ def run_compare(
         "memory_mean_latency_s": round(statistics.mean(memory_latencies), 3) if memory_latencies else 0.0,
         "direct_error_count": direct_errors,
         "memory_error_count": memory_errors,
+        "direct_permuted_same_letter_rate": round(
+            statistics.mean(row.direct_same_letter_after_permutation for row in direct_perm_rows),
+            3,
+        )
+        if direct_perm_rows
+        else None,
+        "memory_permuted_same_letter_rate": round(
+            statistics.mean(row.memory_same_letter_after_permutation for row in memory_perm_rows),
+            3,
+        )
+        if memory_perm_rows
+        else None,
+        "direct_permuted_mapped_accuracy": round(
+            statistics.mean(1 if row.direct_permuted_mapped_pred == row.answer else 0 for row in direct_perm_rows),
+            3,
+        )
+        if direct_perm_rows
+        else None,
+        "memory_permuted_mapped_accuracy": round(
+            statistics.mean(1 if row.memory_permuted_mapped_pred == row.answer else 0 for row in memory_perm_rows),
+            3,
+        )
+        if memory_perm_rows
+        else None,
         "memory_orb_accuracy": direct_acc * 0 + memory_acc,
         "long_context_direct_accuracy": direct_acc,
         "delta_memory_minus_long_direct": memory_acc - direct_acc,
@@ -1264,6 +1349,7 @@ def main() -> None:
     parser.add_argument("--reasoning-dwell-ctx", type=int, default=900)
     parser.add_argument("--reasoning-num-predict", type=int, default=192)
     parser.add_argument("--enable-ollama-think", action="store_true")
+    parser.add_argument("--permutation-audit", action="store_true")
     parser.add_argument(
         "--no-progress",
         action="store_true",
@@ -1297,6 +1383,7 @@ def main() -> None:
         reasoning_num_predict=max(32, args.reasoning_num_predict),
         enable_ollama_think=bool(args.enable_ollama_think),
         difficulty_filter=difficulty_filter,
+        permutation_audit=bool(args.permutation_audit),
         show_progress=not bool(args.no_progress),
     )
     print(json.dumps(summary, indent=2))

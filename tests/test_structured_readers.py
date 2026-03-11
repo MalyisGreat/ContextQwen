@@ -13,6 +13,7 @@ from memory_orb.structured_readers import _truncate_context_window
 from memory_orb.structured_readers import _decompose_option_claims
 from memory_orb.structured_readers import _extract_parameter_records
 from memory_orb.structured_readers import _final_manual_adjudication
+from memory_orb.structured_readers import _manual_matrix_is_mostly_unresolved
 from memory_orb.structured_readers import _parse_manual_sections
 from memory_orb.structured_readers import _select_manual_answer
 from memory_orb.structured_readers import profile_structure
@@ -359,6 +360,17 @@ def test_manual_final_adjudication_uses_single_system_message():
     assert answer == "B"
     assert len(system_messages) == 1
     assert "claim matrix" in system_messages[0]["content"].lower()
+
+
+def test_manual_matrix_is_mostly_unresolved_detects_weak_claim_sets():
+    analyses = {
+        "A": {"overall_status": "unresolved", "claims": [{"status": "unresolved"}]},
+        "B": {"overall_status": "unresolved", "claims": [{"status": "unresolved"}, {"status": "supported"}]},
+        "C": {"overall_status": "unresolved", "claims": [{"status": "unresolved"}]},
+        "D": {"overall_status": "unresolved", "claims": [{"status": "unresolved"}]},
+    }
+
+    assert _manual_matrix_is_mostly_unresolved(analyses) is True
 
 
 def test_procedure_reader_rejects_finance_report_false_positive():

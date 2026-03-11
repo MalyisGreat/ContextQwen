@@ -9,8 +9,10 @@ from benchmarks.longbench_v2_compare import _extract_choice
 from benchmarks.longbench_v2_compare import _extract_reasoned_chat_evidence
 from benchmarks.longbench_v2_compare import _OllamaAdapter
 from benchmarks.longbench_v2_compare import _looks_like_tabular_context
+from benchmarks.longbench_v2_compare import _map_permuted_choice
 from benchmarks.longbench_v2_compare import _normalize_reasoned_option_analysis
 from benchmarks.longbench_v2_compare import _parse_tabular_context
+from benchmarks.longbench_v2_compare import _permute_case_labels
 from benchmarks.longbench_v2_compare import _should_route_reasoned_chat
 from benchmarks.longbench_v2_compare import _try_answer_table_rank_question
 from benchmarks.longbench_v2_compare import BenchCase
@@ -20,6 +22,7 @@ from memory_orb.structured_readers import profile_structure
 def test_extract_choice_from_json_and_plain_text():
     assert _extract_choice('{"answer":"C"}') == "C"
     assert _extract_choice('{"value":"b"}') == "B"
+    assert _extract_choice("A: 0.21 weak\nB: 0.92 supported\nC: 0.11 contradicted\nD: 0.18 weak") == "B"
     assert _extract_choice("Answer: D") == "D"
     assert _extract_choice("A") == "A"
     assert _extract_choice("No valid answer") == ""
@@ -55,6 +58,34 @@ def test_build_mc_prompt_contains_all_options():
     assert "B. opt2" in prompt
     assert "C. opt3" in prompt
     assert "D. opt4" in prompt
+    assert "Return exactly four lines" in prompt
+
+
+def test_permute_case_labels_changes_option_order_and_maps_back():
+    case = BenchCase(
+        case_id="perm-1",
+        length="medium",
+        difficulty="hard",
+        domain="domain",
+        sub_domain="sub",
+        question="Which answer is correct?",
+        context="ctx",
+        choice_a="alpha",
+        choice_b="beta",
+        choice_c="gamma",
+        choice_d="delta",
+        answer="C",
+    )
+
+    permuted, permuted_to_original = _permute_case_labels(case, "seed:perm-1")
+
+    assert (permuted.choice_a, permuted.choice_b, permuted.choice_c, permuted.choice_d) != (
+        case.choice_a,
+        case.choice_b,
+        case.choice_c,
+        case.choice_d,
+    )
+    assert _map_permuted_choice(permuted.answer, permuted_to_original) == case.answer
 
 
 def test_extract_reasoned_chat_evidence_condenses_answer_doc_lines():

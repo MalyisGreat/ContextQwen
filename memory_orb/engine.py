@@ -10,6 +10,9 @@ from typing import Any
 from uuid import uuid4
 
 from .adapters import Embedder, HashingEmbedder, ModelAdapter, SimpleTokenEstimator, TokenEstimator
+from .mcq import build_multiple_choice_question_block, build_scorecard_instruction_block
+from .mcq import extract_mc_choice as extract_multiple_choice_choice
+from .mcq import extract_multiple_choice_options, strip_multiple_choice_options
 from .types import AnswerDocumentResult, ContextPacket, FocusLatch, MemoryOrb, SemanticCard, Turn
 from .utils import cosine_similarity, extract_anchors, merge_synopsis, mmr_rank, summarize_text
 
@@ -254,8 +257,6 @@ class MemoryOrbEngine:
         "subject company(ies)",
         "mci (p)",
     )
-    _MC_OPTION_RE = re.compile(r"(?im)^\s*([ABCD])\.\s+(.+?)\s*$")
-
     def __init__(
         self,
         config: MemoryOrbEngineConfig | None = None,
@@ -515,13 +516,22 @@ class MemoryOrbEngine:
                 answer_doc,
             ]
         )
+        if self._extract_multiple_choice_options(question_clean):
+            user_prompt = (
+                self._build_multiple_choice_question_block(question_clean)
+                + "\n\n"
+                + build_scorecard_instruction_block()
+            )
+        else:
+            user_prompt = question_clean
         messages = [
             {"role": "system", "content": system_block},
-            {"role": "user", "content": question_clean},
+            {"role": "user", "content": user_prompt},
         ]
         total_tokens = sum(self.token_estimator.count(msg["content"]) for msg in messages)
         messages, total_tokens = self._enforce_context_cap(messages, total_tokens)
-        answer = model.complete(messages)
+        answer_raw = model.complete(messages)
+        answer = extract_multiple_choice_choice(answer_raw) or answer_raw
         if prefer_final_code and ranked_codes and allow_answer_coercion:
             answer = self._coerce_answer_with_code_preference(answer, ranked_codes, excluded_codes)
         if update_memory_state:
@@ -1214,37 +1224,13 @@ class MemoryOrbEngine:
         }
 
     def _extract_multiple_choice_options(self, question: str) -> dict[str, str]:
-        options: dict[str, str] = {}
-        for match in self._MC_OPTION_RE.finditer(question or ""):
-            label = match.group(1).upper()
-            text = " ".join(match.group(2).split()).strip()
-            if label in {"A", "B", "C", "D"} and text:
-                options[label] = text
-        return options
+        return extract_multiple_choice_options(question)
 
     def _strip_multiple_choice_options(self, question: str) -> str:
-        raw = (question or "").strip()
-        if not raw:
-            return ""
-        if not self._extract_multiple_choice_options(raw):
-            return raw
-        kept_lines: list[str] = []
-        option_block_started = False
-        for line in raw.splitlines():
-            stripped = line.strip()
-            if not stripped:
-                if not option_block_started:
-                    kept_lines.append("")
-                continue
-            if stripped.lower() == "options:":
-                option_block_started = True
-                continue
-            if self._MC_OPTION_RE.match(stripped):
-                option_block_started = True
-                continue
-            kept_lines.append(line.rstrip())
-        collapsed = "\n".join(line for line in kept_lines).strip()
-        return collapsed or raw
+        return strip_multiple_choice_options(question)
+
+    def _build_multiple_choice_question_block(self, question: str) -> str:
+        return build_multiple_choice_question_block(question, self._extract_multiple_choice_options(question))
 
     def _build_multiple_choice_evidence_block(self, question: str, orbs: list[MemoryOrb]) -> str:
         options = self._extract_multiple_choice_options(question)

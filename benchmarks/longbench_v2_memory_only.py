@@ -15,6 +15,8 @@ if __package__ in {None, ""}:
 
 from benchmarks.api_backend import ChatBackendConfig
 from benchmarks.longbench_v2_compare import _extract_choice
+from benchmarks.longbench_v2_compare import _map_permuted_choice
+from benchmarks.longbench_v2_compare import _permute_case_labels
 from benchmarks.longbench_v2_compare import _progress_bar
 from benchmarks.longbench_v2_compare import _run_memory_case
 from benchmarks.longbench_v2_compare import _select_cases
@@ -40,6 +42,9 @@ class MemoryOnlyBenchResult:
     route_profile_confidence: float = 0.0
     deterministic_reader_used: int = 0
     reader_evidence_excerpt: str = ""
+    memory_permuted_pred: str = ""
+    memory_permuted_mapped_pred: str = ""
+    memory_same_letter_after_permutation: int = 0
 
 
 def run_memory_only(
@@ -58,6 +63,7 @@ def run_memory_only(
     reasoning_num_predict: int = 192,
     enable_ollama_think: bool = False,
     difficulty_filter: set[str] | None = None,
+    permutation_audit: bool = False,
     show_progress: bool = True,
 ) -> dict[str, Any]:
     cases = _select_cases(
@@ -84,6 +90,9 @@ def run_memory_only(
         route_profile_confidence = 0.0
         deterministic_reader_used = 0
         reader_evidence_excerpt = ""
+        memory_permuted_pred = ""
+        memory_permuted_mapped_pred = ""
+        memory_same_letter_after_permutation = 0
         try:
             memory_started = time.perf_counter()
             memory_run = _run_memory_case(
@@ -112,6 +121,30 @@ def run_memory_only(
         except Exception as err:
             memory_latency_s = time.perf_counter() - memory_started
             memory_error = str(err)
+
+        if permutation_audit:
+            permuted_case, permuted_to_original = _permute_case_labels(case, f"{seed}:{case.case_id}")
+            try:
+                memory_permuted_run = _run_memory_case(
+                    case=permuted_case,
+                    model=model,
+                    memory_ctx=memory_ctx,
+                    timeout_s=timeout_s,
+                    chunk_chars=chunk_chars,
+                    memory_answer_mode=memory_answer_mode,
+                    memory_dwell_mode=memory_dwell_mode,
+                    reasoning_dwell_ctx=reasoning_dwell_ctx,
+                    backend=backend,
+                    reasoning_num_predict=reasoning_num_predict,
+                    enable_ollama_think=enable_ollama_think,
+                )
+                memory_permuted_pred = _extract_choice(memory_permuted_run.answer_raw)
+                memory_permuted_mapped_pred = _map_permuted_choice(memory_permuted_pred, permuted_to_original)
+                memory_same_letter_after_permutation = int(bool(memory_pred) and memory_permuted_pred == memory_pred)
+            except Exception:
+                memory_permuted_pred = ""
+                memory_permuted_mapped_pred = ""
+
         memory_latencies.append(memory_latency_s)
         results.append(
             MemoryOnlyBenchResult(
@@ -133,6 +166,9 @@ def run_memory_only(
                 route_profile_confidence=route_profile_confidence,
                 deterministic_reader_used=deterministic_reader_used,
                 reader_evidence_excerpt=reader_evidence_excerpt,
+                memory_permuted_pred=memory_permuted_pred,
+                memory_permuted_mapped_pred=memory_permuted_mapped_pred,
+                memory_same_letter_after_permutation=memory_same_letter_after_permutation,
             )
         )
         if show_progress:
@@ -149,6 +185,7 @@ def run_memory_only(
             )
 
     elapsed = time.time() - started
+    perm_rows = [row for row in results if row.memory_permuted_pred]
     return {
         "benchmark": "THUDM/LongBench-v2",
         "task_format": "multiple-choice (A/B/C/D)",
@@ -166,11 +203,24 @@ def run_memory_only(
         "reasoning_dwell_ctx": reasoning_dwell_ctx if memory_answer_mode == "reasoned-chat" or memory_dwell_mode == "reasoned" else None,
         "reasoning_num_predict": reasoning_num_predict if memory_answer_mode == "reasoned-chat" or memory_dwell_mode == "reasoned" else None,
         "enable_ollama_think": bool(enable_ollama_think),
+        "permutation_audit_enabled": bool(permutation_audit),
         "chunk_chars": chunk_chars,
         "elapsed_seconds": round(elapsed, 2),
         "memory_accuracy": statistics.mean(row.memory_correct for row in results) if results else 0.0,
         "memory_mean_latency_s": round(statistics.mean(memory_latencies), 3) if memory_latencies else 0.0,
         "memory_error_count": sum(1 for row in results if row.memory_error),
+        "memory_permuted_same_letter_rate": round(
+            statistics.mean(row.memory_same_letter_after_permutation for row in perm_rows),
+            3,
+        )
+        if perm_rows
+        else None,
+        "memory_permuted_mapped_accuracy": round(
+            statistics.mean(1 if row.memory_permuted_mapped_pred == row.answer else 0 for row in perm_rows),
+            3,
+        )
+        if perm_rows
+        else None,
         "results": [asdict(row) for row in results],
     }
 
@@ -206,6 +256,7 @@ def main() -> None:
         help="Multiplies --reasoning-num-predict. Example: 5.0 gives 5x the default reasoning output budget.",
     )
     parser.add_argument("--enable-ollama-think", action="store_true", help="Allow Ollama think mode for supported models on reasoning subcalls.")
+    parser.add_argument("--permutation-audit", action="store_true")
     parser.add_argument("--no-progress", action="store_true", help="Disable per-sample progress lines.")
     parser.add_argument("--json-out", type=str, default="")
     args = parser.parse_args()
@@ -235,6 +286,7 @@ def main() -> None:
         reasoning_num_predict=reasoning_num_predict,
         enable_ollama_think=bool(args.enable_ollama_think),
         difficulty_filter=difficulty_filter,
+        permutation_audit=bool(args.permutation_audit),
         show_progress=not bool(args.no_progress),
     )
     print(json.dumps(summary, indent=2))

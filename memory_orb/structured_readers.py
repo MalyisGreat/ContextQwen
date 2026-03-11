@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from typing import Any, Literal, Protocol, Sequence
 
 from .adapters import ModelAdapter, SimpleTokenEstimator, TokenEstimator
+from .mcq import build_multiple_choice_question_block, build_scorecard_instruction_block
+from .mcq import extract_mc_choice as extract_choice_from_text
 
 
 _CHOICE_RE = re.compile(r"\b([ABCD])\b", flags=re.IGNORECASE)
@@ -124,32 +126,7 @@ class StructuredReader(Protocol):
 
 
 def extract_mc_choice(raw: str) -> str:
-    text = (raw or "").strip()
-    if not text:
-        return ""
-    if text.startswith("{") and text.endswith("}"):
-        try:
-            parsed = json.loads(text)
-            if isinstance(parsed, dict):
-                for key in ("answer", "choice", "option", "value", "result"):
-                    value = parsed.get(key)
-                    if value is not None:
-                        match = _CHOICE_RE.search(str(value))
-                        if match:
-                            return match.group(1).upper()
-        except Exception:
-            pass
-    explicit = re.search(r"(?i)\b(?:answer|choice|option)\s*[:=]\s*['\"]?\s*([ABCD])\b", text)
-    if explicit:
-        return explicit.group(1).upper()
-    stripped = text.upper()
-    if stripped in {"A", "B", "C", "D"}:
-        return stripped
-    if len(text) <= 48:
-        matches = _CHOICE_RE.findall(text)
-        if matches:
-            return matches[-1].upper()
-    return ""
+    return extract_choice_from_text(raw)
 
 
 def profile_structure(packet: QuestionPacket) -> StructureProfile:
@@ -356,12 +333,7 @@ def _estimate_note_density(lines: list[str]) -> float:
 
 
 def _build_mc_prompt(packet: QuestionPacket) -> str:
-    options = packet.options or {}
-    return (
-        f"Question:\n{packet.question}\n\nOptions:\n"
-        + "\n".join(f"{label}. {text}" for label, text in options.items())
-        + '\n\nReturn JSON only: {"answer":"A"} or B/C/D. Return one letter only.'
-    )
+    return build_multiple_choice_question_block(packet.question, packet.options) + "\n\n" + build_scorecard_instruction_block()
 
 
 def _compose_system_message(*sections: str) -> str:
@@ -491,8 +463,7 @@ class TableReader:
                         "Answer the multiple-choice question using only the supplied table-derived evidence.\n"
                         "Do not use outside knowledge.\n"
                         "Compare all options before choosing.\n"
-                        'If the evidence is not discriminative enough, return JSON with {"answer":""}.\n'
-                        'Return JSON with one key: answer.',
+                        "If the evidence is not discriminative enough, keep the scores low instead of defaulting to option A.\n",
                         "\n".join(evidence_lines),
                     ),
                 },
@@ -842,10 +813,14 @@ class ProcedureReader:
             evaluation = _evaluate_option_claims_with_model(model, packet.question, option_text, claims, retrieved)
             analyses[label] = evaluation
             evidence_lines.extend(_format_option_evidence(label, evaluation, retrieved))
-        choice, deterministic = _select_manual_answer(packet.question.lower(), analyses)
-        if not choice:
-            choice = _final_manual_adjudication(model, packet, analyses)
+        if _manual_matrix_is_mostly_unresolved(analyses):
+            choice = ""
             deterministic = False
+        else:
+            choice, deterministic = _select_manual_answer(packet.question.lower(), analyses)
+            if not choice:
+                choice = _final_manual_adjudication(model, packet, analyses)
+                deterministic = False
         answer_raw = json.dumps({"answer": choice}) if choice else ""
         return ReaderOutcome(
             answer_raw=answer_raw,
@@ -1135,6 +1110,20 @@ def _select_manual_answer(question_lower: str, analyses: dict[str, dict[str, Any
     return best_label, bool((best_score - second_best) >= 0.8)
 
 
+def _manual_matrix_is_mostly_unresolved(analyses: dict[str, dict[str, Any]]) -> bool:
+    if not analyses:
+        return True
+    unresolved_heavy = 0
+    for analysis in analyses.values():
+        statuses = [item.get("status", "unresolved") for item in analysis.get("claims", [])]
+        decisive = sum(1 for status in statuses if status in {"supported", "contradicted"})
+        unresolved = sum(1 for status in statuses if status == "unresolved")
+        overall = str(analysis.get("overall_status", "unresolved")).lower()
+        if unresolved >= decisive or overall == "unresolved":
+            unresolved_heavy += 1
+    return unresolved_heavy == len(analyses)
+
+
 def _final_manual_adjudication(model: ModelAdapter, packet: QuestionPacket, analyses: dict[str, dict[str, Any]]) -> str:
     lines: list[str] = []
     for label, analysis in analyses.items():
@@ -1148,8 +1137,7 @@ def _final_manual_adjudication(model: ModelAdapter, packet: QuestionPacket, anal
                 "content": _compose_system_message(
                     "Choose the best multiple-choice answer using only the claim matrix below.\n"
                     "Compare all options before choosing and do not default to option A.\n"
-                    'If the matrix is too unresolved to justify a choice, return JSON with {"answer":""}.\n'
-                    'Return JSON with one key: answer.',
+                    "If the matrix is too unresolved to justify a choice, keep the scores low instead of fabricating certainty.",
                     "\n".join(lines),
                 ),
             },

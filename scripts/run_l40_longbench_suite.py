@@ -246,6 +246,7 @@ def main() -> None:
     parser.add_argument("--cuda-visible-devices", type=str, default="")
     parser.add_argument("--extra-model", action="append", default=[], help="Additional Ollama models to pull before running.")
     parser.add_argument("--enable-ollama-think", action="store_true")
+    parser.add_argument("--permutation-audit", action="store_true")
     parser.add_argument("--run-mrcr", action="store_true")
     parser.add_argument("--mrcr-needles", type=str, default="8")
     parser.add_argument("--mrcr-sample-size", type=int, default=12)
@@ -297,6 +298,7 @@ def main() -> None:
         "reasoning_num_predict": args.reasoning_num_predict,
         "reasoning_predict_multiplier": args.reasoning_predict_multiplier,
         "enable_ollama_think": bool(args.enable_ollama_think),
+        "permutation_audit": bool(args.permutation_audit),
         "ollama_keep_alive": args.ollama_keep_alive,
         "ollama_max_loaded_models": args.ollama_max_loaded_models,
         "ollama_num_parallel": args.ollama_num_parallel,
@@ -423,6 +425,8 @@ def main() -> None:
             compare_cmd.extend(["--difficulty", args.difficulty])
         if args.enable_ollama_think:
             compare_cmd.append("--enable-ollama-think")
+        if args.permutation_audit:
+            compare_cmd.append("--permutation-audit")
         if args.no_progress:
             compare_cmd.append("--no-progress")
 
@@ -470,6 +474,8 @@ def main() -> None:
             memory_cmd.extend(["--difficulty", args.difficulty])
         if args.enable_ollama_think:
             memory_cmd.append("--enable-ollama-think")
+        if args.permutation_audit:
+            memory_cmd.append("--permutation-audit")
         if args.no_progress:
             memory_cmd.append("--no-progress")
 

@@ -69,3 +69,65 @@ def test_run_memory_only_passes_reasoning_overrides(monkeypatch):
     assert summary["memory_accuracy"] == 1.0
     assert summary["reasoning_num_predict"] == 960
     assert summary["enable_ollama_think"] is True
+
+
+def test_run_memory_only_reports_permutation_audit(monkeypatch):
+    cases = [_make_case("c1", answer="B")]
+
+    monkeypatch.setattr(memory_only, "_select_cases", lambda **_: cases)
+    monkeypatch.setattr(
+        memory_only,
+        "_permute_case_labels",
+        lambda case, seed_token: (
+            BenchCase(
+                case_id=case.case_id,
+                length=case.length,
+                difficulty=case.difficulty,
+                domain=case.domain,
+                sub_domain=case.sub_domain,
+                question=case.question,
+                context=case.context,
+                choice_a=case.choice_b,
+                choice_b=case.choice_c,
+                choice_c=case.choice_d,
+                choice_d=case.choice_a,
+                answer="A",
+            ),
+            {"A": "B", "B": "C", "C": "D", "D": "A"},
+        ),
+    )
+
+    def fake_run_memory_case(**kwargs):
+        case = kwargs["case"]
+        return _MemoryRunOutcome(
+            answer_raw=f'{{"answer":"{case.answer}"}}',
+            chunk_count=2,
+            route_name="orb/reasoned-chat",
+            route_profile_shape="prose",
+            route_profile_confidence=0.6,
+            deterministic_reader_used=False,
+            reader_evidence_excerpt="",
+        )
+
+    monkeypatch.setattr(memory_only, "_run_memory_case", fake_run_memory_case)
+
+    summary = memory_only.run_memory_only(
+        sample_size=1,
+        seed=42,
+        lengths={"medium"},
+        max_context_chars=1000,
+        model="Qwen/Qwen3.5-0.8B",
+        memory_ctx=2200,
+        timeout_s=30,
+        chunk_chars=500,
+        memory_answer_mode="reasoned-chat",
+        memory_dwell_mode="reasoned",
+        reasoning_dwell_ctx=900,
+        backend=ChatBackendConfig(provider="openai", api_base="http://127.0.0.1:8000/v1"),
+        permutation_audit=True,
+        show_progress=False,
+    )
+
+    assert summary["permutation_audit_enabled"] is True
+    assert summary["memory_permuted_same_letter_rate"] == 0.0
+    assert summary["memory_permuted_mapped_accuracy"] == 1.0
