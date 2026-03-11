@@ -160,19 +160,36 @@ Memory-only LongBench runner (useful when you want to spend saved latency on a l
 python benchmarks/longbench_v2_memory_only.py --sample-size 12 --lengths medium --model qwen3.5:0.8b --memory-answer-mode reasoned-chat --memory-dwell-mode reasoned --reasoning-dwell-ctx 900 --reasoning-num-predict 192 --reasoning-predict-multiplier 5 --enable-ollama-think
 ```
 
+MRCR compare (modern multi-needle conversational retrieval benchmark):
+
+```bash
+python -m benchmarks.mrcr_compare --sample-size 12 --needles 8 --model qwen3.5:0.8b --json-out runs/mrcr-smoke.json
+```
+
 ## L40 Benchmark Runner
 
-For a single-GPU L40 box, the fastest path in this repo is to keep one Ollama model hot in VRAM and run the benchmark serially with Flash Attention enabled. The suite runner below:
+For a single-GPU L40 box, the fastest path in this repo is usually a `vLLM` OpenAI-compatible server, not Ollama. Ollama still works and is simpler, but if you want raw benchmark throughput on an L40, use the `openai`/`vllm` backend path.
 
-1. Starts an Ollama server with L40-oriented settings
-2. Pulls the models you request
-3. Warms the primary model
-4. Runs direct-vs-reasoned compare
-5. Runs a memory-only scaled reasoning pass
-6. Writes all stdout/stderr and JSON outputs into a timestamped `runs/l40-longbench/...` directory
+The suite runner below can:
+
+1. Start either an Ollama server or a `vLLM` server
+2. Download the requested model(s)
+3. Warm the primary model
+4. Run direct-vs-reasoned LongBench compare
+5. Run a memory-only scaled reasoning pass
+6. Optionally run MRCR
+7. Write all stdout/stderr and JSON outputs into a timestamped `runs/l40-longbench/...` directory
+
+Ollama path:
 
 ```bash
 python scripts/run_l40_longbench_suite.py --model qwen3.5:0.8b --sample-size 50 --lengths medium --enable-ollama-think
+```
+
+vLLM path:
+
+```bash
+python scripts/run_l40_longbench_suite.py --backend-provider openai --model Qwen/Qwen3.5-0.8B --hf-model-id Qwen/Qwen3.5-0.8B --api-base http://127.0.0.1:8000/v1 --api-key EMPTY --sample-size 50 --lengths medium --run-mrcr
 ```
 
 Useful options:
@@ -181,3 +198,40 @@ Useful options:
 - `--reasoning-predict-multiplier 5` to give the memory-only run 5x the default reasoning output budget
 - `--ollama-keep-alive 30m` to keep the model resident between calls
 - `--cuda-visible-devices 0` to pin the run to a specific GPU
+- `--backend-provider openai --hf-model-id ...` to use a `vLLM` OpenAI-compatible backend
+- `--run-mrcr --mrcr-needles 2,4,8` to include OpenAI MRCR variants in the same run directory
+
+## Model Download
+
+You can pre-download either Ollama tags or Hugging Face model snapshots:
+
+```bash
+python scripts/download_benchmark_models.py --ollama-model qwen3.5:0.8b
+python scripts/download_benchmark_models.py --hf-model Qwen/Qwen3.5-0.8B
+```
+
+This also works from a Jupyter notebook cell:
+
+```python
+!python scripts/download_benchmark_models.py --hf-model Qwen/Qwen3.5-0.8B
+```
+
+## Modern Needle Benchmarks
+
+This repo now supports three modern needle-style benchmark paths:
+
+- `MRCR` via `benchmarks/mrcr_compare.py` for direct-vs-Memory-Orb conversational retrieval
+- `RULER` setup and orchestration via `scripts/setup_modern_needle_benchmarks.py` and `scripts/run_modern_needle_suite.py`
+- `NoLiMa` setup and orchestration via `scripts/setup_modern_needle_benchmarks.py` and `scripts/run_modern_needle_suite.py`
+
+Setup the external official benchmark repos and datasets:
+
+```bash
+python scripts/setup_modern_needle_benchmarks.py
+```
+
+Run a small official-suite smoke, not a full benchmark:
+
+```bash
+python scripts/run_modern_needle_suite.py --run-mrcr --run-ruler --run-nolima --model qwen3.5:0.8b --hf-model-id Qwen/Qwen3.5-0.8B --backend-provider openai --api-base http://127.0.0.1:8000/v1 --api-key EMPTY --mrcr-sample-size 8 --ruler-sample-size 8 --ruler-seq-lengths 4096,8192 --nolima-context-lengths 4000,8000
+```

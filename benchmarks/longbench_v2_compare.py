@@ -6,19 +6,16 @@ import io
 import json
 import random
 import re
-import socket
 import statistics
 import time
 from dataclasses import asdict
 from dataclasses import dataclass
 from typing import Any
-from urllib.error import HTTPError
-from urllib.error import URLError
-from urllib.request import Request
-from urllib.request import urlopen
 
 from datasets import load_dataset
 
+from benchmarks.api_backend import ChatBackendConfig
+from benchmarks.api_backend import chat_completion
 from memory_orb import MemoryOrbEngine
 from memory_orb import MemoryOrbEngineConfig
 from memory_orb.adapters import ModelAdapter
@@ -158,69 +155,6 @@ def _progress_bar(done: int, total: int, width: int = 28) -> str:
     filled = int((done / float(total)) * width)
     filled = max(0, min(width, filled))
     return "[" + ("#" * filled) + ("-" * (width - filled)) + "]"
-
-
-def _ollama_keep_alive() -> str:
-    return os.environ.get("MEMORY_ORB_OLLAMA_KEEP_ALIVE", "0s")
-
-
-def _ollama_chat(
-    model: str,
-    messages: list[dict[str, str]],
-    num_ctx: int,
-    timeout_s: int = 180,
-    json_mode: bool = True,
-    response_schema: dict[str, Any] | None = None,
-    think: bool = False,
-    num_predict: int = 64,
-) -> str:
-    payload: dict[str, Any] = {
-        "model": model,
-        "messages": messages,
-        "stream": False,
-        "think": think,
-        "options": {
-            "temperature": 0,
-            "top_p": 0.1,
-            "num_ctx": num_ctx,
-            "num_predict": num_predict,
-        },
-        "keep_alive": _ollama_keep_alive(),
-    }
-    if response_schema is not None:
-        payload["format"] = response_schema
-    elif json_mode:
-        payload["format"] = "json"
-
-    req = Request(
-        "http://127.0.0.1:11434/api/chat",
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-    try:
-        with urlopen(req, timeout=timeout_s) as resp:
-            body = resp.read().decode("utf-8")
-    except HTTPError as err:
-        detail = ""
-        try:
-            detail = err.read().decode("utf-8")
-        except Exception:
-            detail = str(err)
-        raise RuntimeError(f"Ollama chat failed (HTTP {err.code}): {detail}") from err
-    except URLError as err:
-        raise RuntimeError(f"Ollama chat failed: {err}") from err
-    except TimeoutError as err:
-        raise RuntimeError(f"Ollama chat timed out: {err}") from err
-    except socket.timeout as err:
-        raise RuntimeError(f"Ollama socket timeout: {err}") from err
-
-    parsed: dict[str, Any] = json.loads(body)
-    message = parsed.get("message") or {}
-    content = str(message.get("content", "")).strip()
-    if content:
-        return content
-    return str(message.get("thinking", "")).strip()
 
 
 def _build_mc_prompt(case: BenchCase) -> str:
@@ -553,6 +487,7 @@ def _run_direct_case(
     model: str,
     direct_ctx: int,
     timeout_s: int,
+    backend: ChatBackendConfig,
 ) -> str:
     schema = {
         "type": "object",
@@ -579,7 +514,8 @@ def _run_direct_case(
     last_error = ""
     for ctx in ctx_candidates:
         try:
-            return _ollama_chat(
+            return chat_completion(
+                backend=backend,
                 model=model,
                 messages=messages,
                 num_ctx=ctx,
@@ -593,12 +529,13 @@ def _run_direct_case(
     raise RuntimeError(f"Direct inference failed for case {case.case_id}: {last_error}")
 
 
-class _OllamaAdapter(ModelAdapter):
+class _ChatAdapter(ModelAdapter):
     def __init__(
         self,
         model_name: str,
         num_ctx: int,
         timeout_s: int,
+        backend: ChatBackendConfig,
         response_schema: dict[str, Any] | None = None,
         reasoning_num_predict: int = 192,
         enable_think: bool = False,
@@ -606,12 +543,14 @@ class _OllamaAdapter(ModelAdapter):
         self.model_name = model_name
         self.num_ctx = num_ctx
         self.timeout_s = timeout_s
+        self.backend = backend
         self.response_schema = response_schema
         self.reasoning_num_predict = reasoning_num_predict
         self.enable_think = enable_think
 
     def complete(self, messages: list[dict[str, str]]) -> str:
-        return _ollama_chat(
+        return chat_completion(
+            backend=self.backend,
             model=self.model_name,
             messages=messages,
             num_ctx=self.num_ctx,
@@ -623,6 +562,8 @@ class _OllamaAdapter(ModelAdapter):
     def _should_use_ollama_think(self, think: bool) -> bool:
         if not think:
             return False
+        if self.backend.normalized_provider() != "ollama":
+            return False
         if self.enable_think:
             return True
         model_lower = self.model_name.lower()
@@ -631,7 +572,8 @@ class _OllamaAdapter(ModelAdapter):
         return True
 
     def complete_with_reasoning(self, messages: list[dict[str, str]], think: bool = True) -> str:
-        return _ollama_chat(
+        return chat_completion(
+            backend=self.backend,
             model=self.model_name,
             messages=messages,
             num_ctx=self.num_ctx,
@@ -641,6 +583,9 @@ class _OllamaAdapter(ModelAdapter):
             think=self._should_use_ollama_think(think),
             num_predict=self.reasoning_num_predict,
         )
+
+
+_OllamaAdapter = _ChatAdapter
 
 
 class _FixedResponseAdapter(ModelAdapter):
@@ -742,15 +687,17 @@ def _build_reasoned_option_analysis(
     model: str,
     num_ctx: int,
     timeout_s: int,
+    backend: ChatBackendConfig,
     reasoning_num_predict: int,
     enable_ollama_think: bool,
 ) -> str:
     if not evidence_block:
         return ""
-    analysis_adapter = _OllamaAdapter(
+    analysis_adapter = _ChatAdapter(
         model_name=model,
         num_ctx=num_ctx,
         timeout_s=timeout_s,
+        backend=backend,
         response_schema=None,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
@@ -792,16 +739,18 @@ def _build_reasoned_chat_supplement(
     timeout_s: int,
     chunk_chars: int,
     reasoning_dwell_ctx: int,
+    backend: ChatBackendConfig,
     reasoning_num_predict: int,
     enable_ollama_think: bool,
 ) -> str:
     prompt = _build_mc_prompt(case)
     scratch_engine = _build_memory_engine(memory_ctx=memory_ctx, answer_dwell_mode="reasoned")
     _ingest_benchmark_context(scratch_engine, case.context, chunk_chars=chunk_chars)
-    dwell_adapter = _OllamaAdapter(
+    dwell_adapter = _ChatAdapter(
         model_name=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
+        backend=backend,
         response_schema=None,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
@@ -827,6 +776,7 @@ def _build_reasoned_chat_supplement(
         model=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
+        backend=backend,
         reasoning_num_predict=reasoning_num_predict,
         enable_ollama_think=enable_ollama_think,
     )
@@ -844,13 +794,15 @@ def _build_option_probe_supplement(
     timeout_s: int,
     chunk_chars: int,
     reasoning_dwell_ctx: int,
+    backend: ChatBackendConfig,
     reasoning_num_predict: int,
     enable_ollama_think: bool,
 ) -> str:
-    dwell_adapter = _OllamaAdapter(
+    dwell_adapter = _ChatAdapter(
         model_name=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
+        backend=backend,
         response_schema=None,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
@@ -891,7 +843,7 @@ def _build_option_probe_supplement(
     return "\n".join(sections)
 
 
-def _adjudicate_from_probe_notes(adapter: _OllamaAdapter, prompt: str, supplement: str) -> str:
+def _adjudicate_from_probe_notes(adapter: _ChatAdapter, prompt: str, supplement: str) -> str:
     return adapter.complete(
         [
             {
@@ -944,6 +896,7 @@ def _run_memory_case(
     memory_answer_mode: str,
     memory_dwell_mode: str,
     reasoning_dwell_ctx: int,
+    backend: ChatBackendConfig,
     reasoning_num_predict: int = 192,
     enable_ollama_think: bool = False,
 ) -> _MemoryRunOutcome:
@@ -958,26 +911,29 @@ def _run_memory_case(
     main_dwell_mode = "heuristic" if memory_answer_mode == "reasoned-chat" else memory_dwell_mode
     engine = _build_memory_engine(memory_ctx=memory_ctx, answer_dwell_mode=main_dwell_mode)
     chunk_count = _ingest_benchmark_context(engine, case.context, chunk_chars=chunk_chars)
-    adapter = _OllamaAdapter(
+    adapter = _ChatAdapter(
         model_name=model,
         num_ctx=memory_ctx,
         timeout_s=timeout_s,
+        backend=backend,
         response_schema=schema,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
     )
-    structured_adapter = _OllamaAdapter(
+    structured_adapter = _ChatAdapter(
         model_name=model,
         num_ctx=min(memory_ctx, max(512, reasoning_dwell_ctx), engine.config.structured_reader_ctx),
         timeout_s=timeout_s,
+        backend=backend,
         response_schema=None,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
     )
-    dwell_adapter = _OllamaAdapter(
+    dwell_adapter = _ChatAdapter(
         model_name=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
+        backend=backend,
         response_schema=None,
         reasoning_num_predict=reasoning_num_predict,
         enable_think=enable_ollama_think,
@@ -1026,6 +982,7 @@ def _run_memory_case(
                 timeout_s=timeout_s,
                 chunk_chars=chunk_chars,
                 reasoning_dwell_ctx=reasoning_dwell_ctx,
+                backend=backend,
                 reasoning_num_predict=reasoning_num_predict,
                 enable_ollama_think=enable_ollama_think,
             )
@@ -1037,6 +994,7 @@ def _run_memory_case(
                     timeout_s=timeout_s,
                     chunk_chars=chunk_chars,
                     reasoning_dwell_ctx=reasoning_dwell_ctx,
+                    backend=backend,
                     reasoning_num_predict=reasoning_num_predict,
                     enable_ollama_think=enable_ollama_think,
                 )
@@ -1088,6 +1046,7 @@ def run_compare(
     memory_answer_mode: str,
     memory_dwell_mode: str,
     reasoning_dwell_ctx: int,
+    backend: ChatBackendConfig,
     reasoning_num_predict: int = 192,
     enable_ollama_think: bool = False,
     difficulty_filter: set[str] | None = None,
@@ -1114,7 +1073,13 @@ def run_compare(
         direct_latency_s = 0.0
         try:
             direct_started = time.perf_counter()
-            direct_raw = _run_direct_case(case=case, model=long_model, direct_ctx=direct_ctx, timeout_s=timeout_s)
+            direct_raw = _run_direct_case(
+                case=case,
+                model=long_model,
+                direct_ctx=direct_ctx,
+                timeout_s=timeout_s,
+                backend=backend,
+            )
             direct_latency_s = time.perf_counter() - direct_started
             direct_pred = _extract_choice(direct_raw)
             direct_correct = 1 if direct_pred == case.answer else 0
@@ -1145,6 +1110,7 @@ def run_compare(
                 memory_answer_mode=memory_answer_mode,
                 memory_dwell_mode=memory_dwell_mode,
                 reasoning_dwell_ctx=reasoning_dwell_ctx,
+                backend=backend,
                 reasoning_num_predict=reasoning_num_predict,
                 enable_ollama_think=enable_ollama_think,
             )
@@ -1225,6 +1191,7 @@ def run_compare(
         "max_context_chars": max_context_chars,
         "memory_model": memory_model,
         "long_context_model": long_model,
+        "backend": backend.as_dict(),
         "memory_answer_mode": memory_answer_mode,
         "memory_dwell_mode": memory_dwell_mode,
         "reasoning_dwell_ctx": reasoning_dwell_ctx if memory_dwell_mode == "reasoned" else None,
@@ -1268,6 +1235,25 @@ def main() -> None:
     parser.add_argument("--memory-ctx", type=int, default=2200)
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--chunk-chars", type=int, default=1400)
+    parser.add_argument(
+        "--backend-provider",
+        type=str,
+        choices=["ollama", "openai", "openai-compatible", "vllm"],
+        default="ollama",
+        help="Inference backend. Use openai/vllm for an OpenAI-compatible server such as vLLM.",
+    )
+    parser.add_argument(
+        "--api-base",
+        type=str,
+        default="",
+        help="Base URL for an OpenAI-compatible server, for example http://127.0.0.1:8000/v1",
+    )
+    parser.add_argument(
+        "--api-key",
+        type=str,
+        default="EMPTY",
+        help="API key for the OpenAI-compatible server. vLLM commonly uses EMPTY.",
+    )
     parser.add_argument("--memory-answer-mode", type=str, choices=["chat", "answer-doc", "reasoned-chat"], default="chat")
     parser.add_argument("--memory-dwell-mode", type=str, choices=["heuristic", "reasoned"], default="heuristic")
     parser.add_argument("--reasoning-dwell-ctx", type=int, default=900)
@@ -1283,6 +1269,11 @@ def main() -> None:
 
     lengths = {item.strip() for item in args.lengths.split(",") if item.strip()}
     difficulty_filter = {item.strip() for item in args.difficulty.split(",") if item.strip()} or None
+    backend = ChatBackendConfig(
+        provider=args.backend_provider,
+        api_base=args.api_base,
+        api_key=args.api_key,
+    )
     summary = run_compare(
         sample_size=max(1, args.sample_size),
         seed=args.seed,
@@ -1297,6 +1288,7 @@ def main() -> None:
         memory_answer_mode=args.memory_answer_mode,
         memory_dwell_mode=args.memory_dwell_mode,
         reasoning_dwell_ctx=max(256, args.reasoning_dwell_ctx),
+        backend=backend,
         reasoning_num_predict=max(32, args.reasoning_num_predict),
         enable_ollama_think=bool(args.enable_ollama_think),
         difficulty_filter=difficulty_filter,

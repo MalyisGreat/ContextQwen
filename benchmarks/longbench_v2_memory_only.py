@@ -13,6 +13,7 @@ from typing import Any
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from benchmarks.api_backend import ChatBackendConfig
 from benchmarks.longbench_v2_compare import _extract_choice
 from benchmarks.longbench_v2_compare import _progress_bar
 from benchmarks.longbench_v2_compare import _run_memory_case
@@ -53,6 +54,7 @@ def run_memory_only(
     memory_answer_mode: str,
     memory_dwell_mode: str,
     reasoning_dwell_ctx: int,
+    backend: ChatBackendConfig,
     reasoning_num_predict: int = 192,
     enable_ollama_think: bool = False,
     difficulty_filter: set[str] | None = None,
@@ -93,6 +95,7 @@ def run_memory_only(
                 memory_answer_mode=memory_answer_mode,
                 memory_dwell_mode=memory_dwell_mode,
                 reasoning_dwell_ctx=reasoning_dwell_ctx,
+                backend=backend,
                 reasoning_num_predict=reasoning_num_predict,
                 enable_ollama_think=enable_ollama_think,
             )
@@ -156,6 +159,7 @@ def run_memory_only(
         "difficulty_filter": sorted(difficulty_filter) if difficulty_filter else [],
         "max_context_chars": max_context_chars,
         "model": model,
+        "backend": backend.as_dict(),
         "memory_ctx": memory_ctx,
         "memory_answer_mode": memory_answer_mode,
         "memory_dwell_mode": memory_dwell_mode,
@@ -182,6 +186,15 @@ def main() -> None:
     parser.add_argument("--memory-ctx", type=int, default=2200)
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--chunk-chars", type=int, default=1400)
+    parser.add_argument(
+        "--backend-provider",
+        type=str,
+        choices=["ollama", "openai", "openai-compatible", "vllm"],
+        default="ollama",
+        help="Inference backend. Use openai/vllm for an OpenAI-compatible server such as vLLM.",
+    )
+    parser.add_argument("--api-base", type=str, default="", help="Base URL for an OpenAI-compatible server.")
+    parser.add_argument("--api-key", type=str, default="EMPTY", help="API key for the OpenAI-compatible server.")
     parser.add_argument("--memory-answer-mode", type=str, choices=["chat", "answer-doc", "reasoned-chat"], default="reasoned-chat")
     parser.add_argument("--memory-dwell-mode", type=str, choices=["heuristic", "reasoned"], default="reasoned")
     parser.add_argument("--reasoning-dwell-ctx", type=int, default=900)
@@ -201,6 +214,11 @@ def main() -> None:
     difficulty_filter = {item.strip() for item in args.difficulty.split(",") if item.strip()} or None
     base_predict = max(32, args.reasoning_num_predict)
     reasoning_num_predict = max(32, int(round(base_predict * max(0.1, args.reasoning_predict_multiplier))))
+    backend = ChatBackendConfig(
+        provider=args.backend_provider,
+        api_base=args.api_base,
+        api_key=args.api_key,
+    )
     summary = run_memory_only(
         sample_size=max(1, args.sample_size),
         seed=args.seed,
@@ -213,6 +231,7 @@ def main() -> None:
         memory_answer_mode=args.memory_answer_mode,
         memory_dwell_mode=args.memory_dwell_mode,
         reasoning_dwell_ctx=max(256, args.reasoning_dwell_ctx),
+        backend=backend,
         reasoning_num_predict=reasoning_num_predict,
         enable_ollama_think=bool(args.enable_ollama_think),
         difficulty_filter=difficulty_filter,

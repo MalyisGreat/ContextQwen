@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from benchmarks.api_backend import ChatBackendConfig
 from benchmarks import longbench_v2_memory_only as memory_only
 from benchmarks.longbench_v2_compare import BenchCase
 from benchmarks.longbench_v2_compare import _MemoryRunOutcome
@@ -55,6 +56,7 @@ def test_run_memory_only_passes_reasoning_overrides(monkeypatch):
         memory_answer_mode="reasoned-chat",
         memory_dwell_mode="reasoned",
         reasoning_dwell_ctx=900,
+        backend=ChatBackendConfig(provider="ollama"),
         reasoning_num_predict=960,
         enable_ollama_think=True,
         show_progress=False,
@@ -63,6 +65,7 @@ def test_run_memory_only_passes_reasoning_overrides(monkeypatch):
     assert len(captured) == 2
     assert all(call["reasoning_num_predict"] == 960 for call in captured)
     assert all(call["enable_ollama_think"] is True for call in captured)
+    assert all(call["backend"].normalized_provider() == "ollama" for call in captured)
     assert summary["memory_accuracy"] == 1.0
     assert summary["reasoning_num_predict"] == 960
     assert summary["enable_ollama_think"] is True

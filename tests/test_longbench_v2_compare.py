@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from benchmarks.api_backend import ChatBackendConfig
 from benchmarks.longbench_v2_compare import _build_mc_prompt
 from benchmarks.longbench_v2_compare import _build_question_packet
 from benchmarks.longbench_v2_compare import _chunk_text
@@ -207,13 +208,27 @@ def test_ollama_adapter_think_can_be_forced_for_qwen35():
         model_name="qwen3.5:0.8b",
         num_ctx=900,
         timeout_s=30,
+        backend=ChatBackendConfig(provider="ollama"),
     )
     forced_adapter = _OllamaAdapter(
         model_name="qwen3.5:0.8b",
         num_ctx=900,
         timeout_s=30,
+        backend=ChatBackendConfig(provider="ollama"),
         enable_think=True,
     )
 
     assert default_adapter._should_use_ollama_think(True) is False
     assert forced_adapter._should_use_ollama_think(True) is True
+
+
+def test_non_ollama_backend_disables_think_flag():
+    adapter = _OllamaAdapter(
+        model_name="Qwen/Qwen3.5-0.8B",
+        num_ctx=900,
+        timeout_s=30,
+        backend=ChatBackendConfig(provider="openai", api_base="http://127.0.0.1:8000/v1"),
+        enable_think=True,
+    )
+
+    assert adapter._should_use_ollama_think(True) is False
