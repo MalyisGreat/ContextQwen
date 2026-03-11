@@ -360,6 +360,9 @@ def main() -> None:
 
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
+    shim_path = str((repo_root / "third_party_shims").resolve())
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = shim_path if not existing_pythonpath else shim_path + os.pathsep + existing_pythonpath
 
     manifest = {
         "model": args.model,
