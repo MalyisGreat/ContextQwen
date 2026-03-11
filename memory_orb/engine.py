@@ -508,13 +508,15 @@ class MemoryOrbEngine:
         if excluded_codes:
             steering += "\nExcluded replaced codes: " + ", ".join(code.upper() for code in excluded_codes)
 
+        system_block = self._compose_system_message(
+            [
+                (system_prompt or "You are a factual QA assistant.").strip(),
+                steering,
+                answer_doc,
+            ]
+        )
         messages = [
-            {"role": "system", "content": (system_prompt or "You are a factual QA assistant.").strip()},
-            {
-                "role": "system",
-                "content": steering,
-            },
-            {"role": "system", "content": answer_doc},
+            {"role": "system", "content": system_block},
             {"role": "user", "content": question_clean},
         ]
         total_tokens = sum(self.token_estimator.count(msg["content"]) for msg in messages)
@@ -579,12 +581,9 @@ class MemoryOrbEngine:
         recent_tokens = sum(turn.tokens for turn in recent_turns)
 
         messages: list[dict[str, str]] = []
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        if focus_block:
-            messages.append({"role": "system", "content": focus_block})
-        if memory_block:
-            messages.append({"role": "system", "content": memory_block})
+        system_block = self._compose_system_message([system_prompt, focus_block, memory_block])
+        if system_block:
+            messages.append({"role": "system", "content": system_block})
         for turn in recent_turns:
             messages.append({"role": turn.role, "content": turn.content})
         query_text = user_query.strip()
@@ -610,6 +609,10 @@ class MemoryOrbEngine:
             latched_subgoal=self._focus_latch.summary if self._focus_latch else "",
             background_subgoal=self._focus_latch.predecessor_summary if self._focus_latch else "",
         )
+
+    def _compose_system_message(self, sections: list[str]) -> str:
+        cleaned = [section.strip() for section in sections if section and section.strip()]
+        return "\n\n".join(cleaned)
 
     def stats(self) -> dict[str, int]:
         return {

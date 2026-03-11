@@ -12,6 +12,7 @@ from memory_orb.structured_readers import TableReader
 from memory_orb.structured_readers import _truncate_context_window
 from memory_orb.structured_readers import _decompose_option_claims
 from memory_orb.structured_readers import _extract_parameter_records
+from memory_orb.structured_readers import _final_manual_adjudication
 from memory_orb.structured_readers import _parse_manual_sections
 from memory_orb.structured_readers import _select_manual_answer
 from memory_orb.structured_readers import profile_structure
@@ -226,6 +227,25 @@ def test_table_reader_temporal_trend_summary_for_case_67039cfabb02136c067cd04e()
     assert any("2018" in line or "2019" in line for line in outcome.evidence_lines)
 
 
+def test_table_reader_uses_single_system_message_for_model_call():
+    packet = _music_trend_packet()
+    profile = profile_structure(packet)
+    captured_messages: list[dict[str, str]] = []
+
+    class _CaptureModel:
+        def complete(self, messages: list[dict[str, str]]) -> str:
+            captured_messages.extend(messages)
+            return '{"answer":"C"}'
+
+    outcome = TableReader().answer(packet, profile, _CaptureModel())
+
+    system_messages = [msg for msg in captured_messages if msg["role"] == "system"]
+
+    assert outcome.answer_pred == "C"
+    assert len(system_messages) == 1
+    assert "table-derived evidence" in system_messages[0]["content"].lower()
+
+
 def test_parse_manual_sections_and_parameter_records():
     sections = _parse_manual_sections(_manual_packet().raw_context)
     parameters = _extract_parameter_records(sections)
@@ -255,6 +275,31 @@ def test_procedure_reader_finds_false_option_for_case_66ec4370821e116aacb1c905()
     assert outcome.route_name == "manual/claim-matrix"
     assert outcome.answer_pred == "B"
     assert any(line.startswith("B: overall=") for line in outcome.evidence_lines)
+
+
+def test_manual_final_adjudication_uses_single_system_message():
+    packet = _manual_packet()
+    captured_messages: list[dict[str, str]] = []
+
+    class _CaptureManualModel:
+        def complete(self, messages: list[dict[str, str]]) -> str:
+            captured_messages.extend(messages)
+            return '{"answer":"B"}'
+
+    answer = _final_manual_adjudication(
+        _CaptureManualModel(),
+        packet,
+        {
+            "A": {"overall_status": "supported", "claims": [{"status": "supported", "claim": "claim a", "evidence": "evidence a"}]},
+            "B": {"overall_status": "contradicted", "claims": [{"status": "contradicted", "claim": "claim b", "evidence": "evidence b"}]},
+        },
+    )
+
+    system_messages = [msg for msg in captured_messages if msg["role"] == "system"]
+
+    assert answer == "B"
+    assert len(system_messages) == 1
+    assert "claim matrix" in system_messages[0]["content"].lower()
 
 
 def test_procedure_reader_rejects_finance_report_false_positive():

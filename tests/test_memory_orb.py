@@ -161,6 +161,29 @@ def test_subgoal_latch_keeps_background_goal_during_focus_shift():
     assert packet.total_tokens <= config.context_max_tokens
 
 
+def test_build_context_combines_memory_sections_into_one_system_message():
+    config = MemoryOrbEngineConfig(
+        context_max_tokens=430,
+        working_max_tokens=80,
+        working_target_tokens=40,
+        max_retrieved_orbs=4,
+    )
+    engine = MemoryOrbEngine(config=config)
+    for idx in range(10):
+        engine.add_turn("user", f"Planning note {idx} about analytics dashboard, oauth callback handling, and release readiness.")
+        engine.add_turn("assistant", "stored acknowledgement")
+
+    packet = engine.build_context(
+        user_query="Focus on oauth callback handling and give next steps.",
+        system_prompt="You are a planning assistant.",
+    )
+
+    system_messages = [msg for msg in packet.messages if msg["role"] == "system"]
+
+    assert len(system_messages) == 1
+    assert "Memory Orb Sync:" in system_messages[0]["content"]
+
+
 def test_selective_attention_uses_recent_pulses_to_retrieve_matching_orbs():
     config = MemoryOrbEngineConfig(
         context_max_tokens=500,
@@ -668,6 +691,28 @@ def test_answer_document_does_not_mutate_state_by_default():
     assert result.answer.startswith("ACK::What is project Atlas?")
     assert engine.turn_index == 0
     assert list(engine._working_turns) == []
+
+
+def test_answer_document_uses_single_system_message_for_backend_compatibility():
+    engine = MemoryOrbEngine()
+    captured_messages: list[dict[str, str]] = []
+
+    class CaptureModel(ModelAdapter):
+        def complete(self, messages):
+            captured_messages.extend(messages)
+            return "captured"
+
+    result = engine.answer_with_answer_document(
+        model=CaptureModel(),
+        question="What is project Atlas?",
+    )
+
+    system_messages = [msg for msg in captured_messages if msg["role"] == "system"]
+
+    assert result.answer == "captured"
+    assert len(system_messages) == 1
+    assert "You are a factual QA assistant." in system_messages[0]["content"]
+    assert "Answer Document:" in system_messages[0]["content"]
 
 
 def test_semantic_cards_skip_mutable_fact_summaries():

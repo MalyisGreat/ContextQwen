@@ -361,6 +361,11 @@ def _build_mc_prompt(packet: QuestionPacket) -> str:
     )
 
 
+def _compose_system_message(*sections: str) -> str:
+    cleaned = [section.strip() for section in sections if section and section.strip()]
+    return "\n\n".join(cleaned)
+
+
 class TableReader:
     def __init__(self, token_estimator: TokenEstimator | None = None, max_rows: int = 6000) -> None:
         self.token_estimator = token_estimator or SimpleTokenEstimator()
@@ -415,13 +420,13 @@ class TableReader:
             [
                 {
                     "role": "system",
-                    "content": (
+                    "content": _compose_system_message(
                         "Answer the multiple-choice question using only the supplied table-derived evidence.\n"
                         "Do not use outside knowledge.\n"
-                        'Return JSON with one key: answer.'
+                        'Return JSON with one key: answer.',
+                        "\n".join(evidence_lines),
                     ),
                 },
-                {"role": "system", "content": "\n".join(evidence_lines)},
                 {"role": "user", "content": _build_mc_prompt(packet)},
             ]
         )
@@ -1061,8 +1066,13 @@ def _final_manual_adjudication(model: ModelAdapter, packet: QuestionPacket, anal
             lines.append(f"{label}: {item.get('status', 'unresolved')} :: {item.get('claim', '')} :: {item.get('evidence', '')}")
     raw = model.complete(
         [
-            {"role": "system", "content": 'Choose the best multiple-choice answer using only the claim matrix below. Return JSON with one key: answer.'},
-            {"role": "system", "content": "\n".join(lines)},
+            {
+                "role": "system",
+                "content": _compose_system_message(
+                    'Choose the best multiple-choice answer using only the claim matrix below. Return JSON with one key: answer.',
+                    "\n".join(lines),
+                ),
+            },
             {"role": "user", "content": _build_mc_prompt(packet)},
         ]
     )
