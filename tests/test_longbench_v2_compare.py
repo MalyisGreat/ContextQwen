@@ -3,6 +3,7 @@ from __future__ import annotations
 from benchmarks.api_backend import ChatBackendConfig
 from benchmarks.longbench_v2_compare import _build_mc_prompt
 from benchmarks.longbench_v2_compare import _build_question_packet
+from benchmarks.longbench_v2_compare import _compose_system_message
 from benchmarks.longbench_v2_compare import _chunk_text
 from benchmarks.longbench_v2_compare import _extract_choice
 from benchmarks.longbench_v2_compare import _extract_reasoned_chat_evidence
@@ -232,3 +233,9 @@ def test_non_ollama_backend_disables_think_flag():
     )
 
     assert adapter._should_use_ollama_think(True) is False
+
+
+def test_compose_system_message_skips_empty_sections():
+    combined = _compose_system_message("base instructions", "", "memory section")
+
+    assert combined == "base instructions\n\nmemory section"

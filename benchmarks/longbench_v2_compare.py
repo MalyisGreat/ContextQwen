@@ -157,6 +157,11 @@ def _progress_bar(done: int, total: int, width: int = 28) -> str:
     return "[" + ("#" * filled) + ("-" * (width - filled)) + "]"
 
 
+def _compose_system_message(*sections: str) -> str:
+    cleaned = [section.strip() for section in sections if section and section.strip()]
+    return "\n\n".join(cleaned)
+
+
 def _build_mc_prompt(case: BenchCase) -> str:
     return _build_mc_question_block(case) + '\n\nReturn JSON only: {"answer":"A"} or B/C/D. Return one letter only.'
 
@@ -429,13 +434,13 @@ def _run_table_memory_case(
         [
             {
                 "role": "system",
-                "content": (
+                "content": _compose_system_message(
                     "Answer the multiple-choice question using only the compact table view.\n"
                     "Treat the first line as the table header.\n"
-                    "Return JSON only with one key: answer (A/B/C/D)."
+                    "Return JSON only with one key: answer (A/B/C/D).",
+                    summary,
                 ),
             },
-            {"role": "system", "content": summary},
             {"role": "user", "content": prompt},
         ]
     )
@@ -848,14 +853,14 @@ def _adjudicate_from_probe_notes(adapter: _ChatAdapter, prompt: str, supplement:
         [
             {
                 "role": "system",
-                "content": (
+                "content": _compose_system_message(
                     "Use only the option-specific probe notes to choose the best answer.\n"
                     "Prefer the option with the most explicit claim-matching evidence.\n"
                     "Ignore generic disclosures, metadata, and boilerplate.\n"
-                    "Return JSON only with one key: answer (A/B/C/D)."
+                    "Return JSON only with one key: answer (A/B/C/D).",
+                    supplement,
                 ),
             },
-            {"role": "system", "content": supplement},
             {"role": "user", "content": prompt},
         ]
     )
