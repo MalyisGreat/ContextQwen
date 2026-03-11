@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 
 from benchmarks.api_backend import ChatBackendConfig
+from benchmarks.api_backend import _normalize_messages_for_chat_template
 from benchmarks.api_backend import chat_completion
 import benchmarks.api_backend as api_backend
 
@@ -57,3 +58,17 @@ def test_chat_completion_openai_parses_message_text(monkeypatch):
     )
 
     assert result == "result text"
+
+
+def test_normalize_messages_moves_system_messages_to_front():
+    messages = [
+        {"role": "user", "content": "hello"},
+        {"role": "assistant", "content": "hi"},
+        {"role": "system", "content": "follow policy"},
+        {"role": "user", "content": "question"},
+    ]
+
+    normalized = _normalize_messages_for_chat_template(messages)
+
+    assert [item["role"] for item in normalized] == ["system", "user", "assistant", "user"]
+    assert normalized[0]["content"] == "follow policy"

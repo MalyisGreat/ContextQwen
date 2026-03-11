@@ -58,12 +58,13 @@ def chat_completion(
     think: bool = False,
     num_predict: int = 64,
 ) -> str:
+    normalized_messages = _normalize_messages_for_chat_template(messages)
     provider = backend.normalized_provider()
     if provider == "ollama":
         return _ollama_chat(
             backend=backend,
             model=model,
-            messages=messages,
+            messages=normalized_messages,
             num_ctx=num_ctx,
             timeout_s=timeout_s,
             json_mode=json_mode,
@@ -75,11 +76,23 @@ def chat_completion(
         return _openai_chat(
             backend=backend,
             model=model,
-            messages=messages,
+            messages=normalized_messages,
             timeout_s=timeout_s,
             num_predict=num_predict,
         )
     raise ValueError(f"Unsupported backend provider: {backend.provider}")
+
+
+def _normalize_messages_for_chat_template(messages: list[dict[str, str]]) -> list[dict[str, str]]:
+    if not messages:
+        return []
+    system_messages = [dict(msg) for msg in messages if msg.get("role") == "system"]
+    non_system_messages = [dict(msg) for msg in messages if msg.get("role") != "system"]
+    if not system_messages:
+        return non_system_messages
+    if len(system_messages) == len(messages):
+        return system_messages
+    return system_messages + non_system_messages
 
 
 def _ollama_chat(
