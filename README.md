@@ -147,3 +147,37 @@ Official benchmark compare (LongBench v2 sampled subset):
 ```bash
 python benchmarks/longbench_v2_compare.py --sample-size 12 --lengths short --max-context-chars 220000 --memory-model qwen3:0.6b --long-model qwen3:4b --json-out benchmarks/longbench_v2_compare_results.json
 ```
+
+Reasoned Memory Orb compare with explicit reasoning budget controls:
+
+```bash
+python benchmarks/longbench_v2_compare.py --sample-size 12 --lengths medium --memory-model qwen3.5:0.8b --long-model qwen3.5:0.8b --memory-answer-mode reasoned-chat --memory-dwell-mode reasoned --reasoning-dwell-ctx 900 --reasoning-num-predict 192 --enable-ollama-think
+```
+
+Memory-only LongBench runner (useful when you want to spend saved latency on a larger reasoning budget):
+
+```bash
+python benchmarks/longbench_v2_memory_only.py --sample-size 12 --lengths medium --model qwen3.5:0.8b --memory-answer-mode reasoned-chat --memory-dwell-mode reasoned --reasoning-dwell-ctx 900 --reasoning-num-predict 192 --reasoning-predict-multiplier 5 --enable-ollama-think
+```
+
+## L40 Benchmark Runner
+
+For a single-GPU L40 box, the fastest path in this repo is to keep one Ollama model hot in VRAM and run the benchmark serially with Flash Attention enabled. The suite runner below:
+
+1. Starts an Ollama server with L40-oriented settings
+2. Pulls the models you request
+3. Warms the primary model
+4. Runs direct-vs-reasoned compare
+5. Runs a memory-only scaled reasoning pass
+6. Writes all stdout/stderr and JSON outputs into a timestamped `runs/l40-longbench/...` directory
+
+```bash
+python scripts/run_l40_longbench_suite.py --model qwen3.5:0.8b --sample-size 50 --lengths medium --enable-ollama-think
+```
+
+Useful options:
+
+- `--extra-model qwen3:4b` to pre-pull additional models
+- `--reasoning-predict-multiplier 5` to give the memory-only run 5x the default reasoning output budget
+- `--ollama-keep-alive 30m` to keep the model resident between calls
+- `--cuda-visible-devices 0` to pin the run to a specific GPU

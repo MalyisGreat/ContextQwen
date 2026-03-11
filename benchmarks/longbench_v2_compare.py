@@ -160,6 +160,10 @@ def _progress_bar(done: int, total: int, width: int = 28) -> str:
     return "[" + ("#" * filled) + ("-" * (width - filled)) + "]"
 
 
+def _ollama_keep_alive() -> str:
+    return os.environ.get("MEMORY_ORB_OLLAMA_KEEP_ALIVE", "0s")
+
+
 def _ollama_chat(
     model: str,
     messages: list[dict[str, str]],
@@ -181,8 +185,7 @@ def _ollama_chat(
             "num_ctx": num_ctx,
             "num_predict": num_predict,
         },
-        # Disable model pinning so alternating 4B and 0.6B calls don't OOM local Ollama.
-        "keep_alive": "0s",
+        "keep_alive": _ollama_keep_alive(),
     }
     if response_schema is not None:
         payload["format"] = response_schema
@@ -598,12 +601,14 @@ class _OllamaAdapter(ModelAdapter):
         timeout_s: int,
         response_schema: dict[str, Any] | None = None,
         reasoning_num_predict: int = 192,
+        enable_think: bool = False,
     ) -> None:
         self.model_name = model_name
         self.num_ctx = num_ctx
         self.timeout_s = timeout_s
         self.response_schema = response_schema
         self.reasoning_num_predict = reasoning_num_predict
+        self.enable_think = enable_think
 
     def complete(self, messages: list[dict[str, str]]) -> str:
         return _ollama_chat(
@@ -616,10 +621,14 @@ class _OllamaAdapter(ModelAdapter):
         )
 
     def _should_use_ollama_think(self, think: bool) -> bool:
+        if not think:
+            return False
+        if self.enable_think:
+            return True
         model_lower = self.model_name.lower()
         if "qwen3.5" in model_lower:
             return False
-        return think
+        return True
 
     def complete_with_reasoning(self, messages: list[dict[str, str]], think: bool = True) -> str:
         return _ollama_chat(
@@ -733,6 +742,8 @@ def _build_reasoned_option_analysis(
     model: str,
     num_ctx: int,
     timeout_s: int,
+    reasoning_num_predict: int,
+    enable_ollama_think: bool,
 ) -> str:
     if not evidence_block:
         return ""
@@ -741,6 +752,8 @@ def _build_reasoned_option_analysis(
         num_ctx=num_ctx,
         timeout_s=timeout_s,
         response_schema=None,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_think=enable_ollama_think,
     )
     question_block = _build_mc_question_block(case)
     raw = analysis_adapter.complete_with_reasoning(
@@ -779,6 +792,8 @@ def _build_reasoned_chat_supplement(
     timeout_s: int,
     chunk_chars: int,
     reasoning_dwell_ctx: int,
+    reasoning_num_predict: int,
+    enable_ollama_think: bool,
 ) -> str:
     prompt = _build_mc_prompt(case)
     scratch_engine = _build_memory_engine(memory_ctx=memory_ctx, answer_dwell_mode="reasoned")
@@ -788,6 +803,8 @@ def _build_reasoned_chat_supplement(
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
         response_schema=None,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_think=enable_ollama_think,
     )
     noop_final_adapter = _FixedResponseAdapter('{"answer":"A"}')
     answer_doc = scratch_engine.answer_with_answer_document(
@@ -810,6 +827,8 @@ def _build_reasoned_chat_supplement(
         model=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_ollama_think=enable_ollama_think,
     )
     if evidence_block and option_analysis:
         return evidence_block + "\n\nOption analysis:\n" + option_analysis
@@ -825,12 +844,16 @@ def _build_option_probe_supplement(
     timeout_s: int,
     chunk_chars: int,
     reasoning_dwell_ctx: int,
+    reasoning_num_predict: int,
+    enable_ollama_think: bool,
 ) -> str:
     dwell_adapter = _OllamaAdapter(
         model_name=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
         response_schema=None,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_think=enable_ollama_think,
     )
     noop_final_adapter = _FixedResponseAdapter('{"answer":"A"}')
     sections: list[str] = ["Option-specific probe notes:"]
@@ -921,6 +944,8 @@ def _run_memory_case(
     memory_answer_mode: str,
     memory_dwell_mode: str,
     reasoning_dwell_ctx: int,
+    reasoning_num_predict: int = 192,
+    enable_ollama_think: bool = False,
 ) -> _MemoryRunOutcome:
     packet = _build_question_packet(case)
     packet_profile = _profile_structure(packet)
@@ -938,18 +963,24 @@ def _run_memory_case(
         num_ctx=memory_ctx,
         timeout_s=timeout_s,
         response_schema=schema,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_think=enable_ollama_think,
     )
     structured_adapter = _OllamaAdapter(
         model_name=model,
         num_ctx=min(memory_ctx, max(512, reasoning_dwell_ctx), engine.config.structured_reader_ctx),
         timeout_s=timeout_s,
         response_schema=None,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_think=enable_ollama_think,
     )
     dwell_adapter = _OllamaAdapter(
         model_name=model,
         num_ctx=max(512, min(memory_ctx, reasoning_dwell_ctx)),
         timeout_s=timeout_s,
         response_schema=None,
+        reasoning_num_predict=reasoning_num_predict,
+        enable_think=enable_ollama_think,
     )
     if memory_answer_mode == "reasoned-chat" and engine.config.enable_structured_readers:
         profile, outcome = _route_structured_memory_case(
@@ -995,6 +1026,8 @@ def _run_memory_case(
                 timeout_s=timeout_s,
                 chunk_chars=chunk_chars,
                 reasoning_dwell_ctx=reasoning_dwell_ctx,
+                reasoning_num_predict=reasoning_num_predict,
+                enable_ollama_think=enable_ollama_think,
             )
             if not supplement.strip():
                 supplement = _build_reasoned_chat_supplement(
@@ -1004,6 +1037,8 @@ def _run_memory_case(
                     timeout_s=timeout_s,
                     chunk_chars=chunk_chars,
                     reasoning_dwell_ctx=reasoning_dwell_ctx,
+                    reasoning_num_predict=reasoning_num_predict,
+                    enable_ollama_think=enable_ollama_think,
                 )
             if supplement:
                 answer = _adjudicate_from_probe_notes(adapter=adapter, prompt=prompt, supplement=supplement)
@@ -1053,6 +1088,8 @@ def run_compare(
     memory_answer_mode: str,
     memory_dwell_mode: str,
     reasoning_dwell_ctx: int,
+    reasoning_num_predict: int = 192,
+    enable_ollama_think: bool = False,
     difficulty_filter: set[str] | None = None,
     show_progress: bool = True,
 ) -> dict[str, Any]:
@@ -1108,6 +1145,8 @@ def run_compare(
                 memory_answer_mode=memory_answer_mode,
                 memory_dwell_mode=memory_dwell_mode,
                 reasoning_dwell_ctx=reasoning_dwell_ctx,
+                reasoning_num_predict=reasoning_num_predict,
+                enable_ollama_think=enable_ollama_think,
             )
             memory_latency_s = time.perf_counter() - memory_started
             memory_raw = memory_run.answer_raw
@@ -1189,6 +1228,8 @@ def run_compare(
         "memory_answer_mode": memory_answer_mode,
         "memory_dwell_mode": memory_dwell_mode,
         "reasoning_dwell_ctx": reasoning_dwell_ctx if memory_dwell_mode == "reasoned" else None,
+        "reasoning_num_predict": reasoning_num_predict if memory_answer_mode == "reasoned-chat" or memory_dwell_mode == "reasoned" else None,
+        "enable_ollama_think": bool(enable_ollama_think),
         "memory_ctx": memory_ctx,
         "direct_ctx": direct_ctx,
         "chunk_chars": chunk_chars,
@@ -1230,6 +1271,8 @@ def main() -> None:
     parser.add_argument("--memory-answer-mode", type=str, choices=["chat", "answer-doc", "reasoned-chat"], default="chat")
     parser.add_argument("--memory-dwell-mode", type=str, choices=["heuristic", "reasoned"], default="heuristic")
     parser.add_argument("--reasoning-dwell-ctx", type=int, default=900)
+    parser.add_argument("--reasoning-num-predict", type=int, default=192)
+    parser.add_argument("--enable-ollama-think", action="store_true")
     parser.add_argument(
         "--no-progress",
         action="store_true",
@@ -1254,6 +1297,8 @@ def main() -> None:
         memory_answer_mode=args.memory_answer_mode,
         memory_dwell_mode=args.memory_dwell_mode,
         reasoning_dwell_ctx=max(256, args.reasoning_dwell_ctx),
+        reasoning_num_predict=max(32, args.reasoning_num_predict),
+        enable_ollama_think=bool(args.enable_ollama_think),
         difficulty_filter=difficulty_filter,
         show_progress=not bool(args.no_progress),
     )

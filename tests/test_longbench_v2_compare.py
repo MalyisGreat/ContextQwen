@@ -5,6 +5,7 @@ from benchmarks.longbench_v2_compare import _build_question_packet
 from benchmarks.longbench_v2_compare import _chunk_text
 from benchmarks.longbench_v2_compare import _extract_choice
 from benchmarks.longbench_v2_compare import _extract_reasoned_chat_evidence
+from benchmarks.longbench_v2_compare import _OllamaAdapter
 from benchmarks.longbench_v2_compare import _looks_like_tabular_context
 from benchmarks.longbench_v2_compare import _normalize_reasoned_option_analysis
 from benchmarks.longbench_v2_compare import _parse_tabular_context
@@ -199,3 +200,20 @@ def test_looks_like_tabular_context_and_rank_solver():
     headers, rows = _parse_tabular_context(context)
     assert headers[:2] == ["Registry", "Assignment"]
     assert _try_answer_table_rank_question(case, headers, rows) == '{"answer": "B"}'
+
+
+def test_ollama_adapter_think_can_be_forced_for_qwen35():
+    default_adapter = _OllamaAdapter(
+        model_name="qwen3.5:0.8b",
+        num_ctx=900,
+        timeout_s=30,
+    )
+    forced_adapter = _OllamaAdapter(
+        model_name="qwen3.5:0.8b",
+        num_ctx=900,
+        timeout_s=30,
+        enable_think=True,
+    )
+
+    assert default_adapter._should_use_ollama_think(True) is False
+    assert forced_adapter._should_use_ollama_think(True) is True
