@@ -1,0 +1,93 @@
+{
+  "model": "qwen3.5:0.8b",
+  "fact_recall": {
+    "heuristic": {
+      "trials": 2,
+      "accuracy": 1,
+      "mean_latency_s": 3.692458049999914,
+      "results": [
+        {
+          "trial_id": "trial-000",
+          "expected": "queue-gold",
+          "predicted": "queue-gold",
+          "exact": 1
+        },
+        {
+          "trial_id": "trial-001",
+          "expected": "ca-central-1",
+          "predicted": "ca-central-1",
+          "exact": 1
+        }
+      ]
+    },
+    "reasoned": {
+      "trials": 2,
+      "accuracy": 1,
+      "mean_latency_s": 13.35815034999996,
+      "results": [
+        {
+          "trial_id": "trial-000",
+          "expected": "queue-gold",
+          "predicted": "queue-gold",
+          "exact": 1
+        },
+        {
+          "trial_id": "trial-001",
+          "expected": "ca-central-1",
+          "predicted": "ca-central-1",
+          "exact": 1
+        }
+      ]
+    }
+  },
+  "linked_hard": {
+    "heuristic": {
+      "cases": 1,
+      "all_fields_exact_accuracy": 1,
+      "final_code_accuracy": 1,
+      "mean_latency_s": 5.08285259999866,
+      "results": [
+        {
+          "case_id": "case-01",
+          "scores": {
+            "final_code_exact": 1,
+            "approver_exact": 1,
+            "final_date_exact": 1,
+            "constraint_match": 1,
+            "all_fields_match": 1
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          }
+        }
+      ]
+    },
+    "reasoned": {
+      "cases": 1,
+      "all_fields_exact_accuracy": 1,
+      "final_code_accuracy": 1,
+      "mean_latency_s": 2.161884299999656,
+      "results": [
+        {
+          "case_id": "case-01",
+          "scores": {
+            "final_code_exact": 1,
+            "approver_exact": 1,
+            "final_date_exact": 1,
+            "constraint_match": 1,
+            "all_fields_match": 1
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          }
+        }
+      ]
+    }
+  }
+}

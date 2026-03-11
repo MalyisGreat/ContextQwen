@@ -1,0 +1,246 @@
+{
+  "model": "qwen3:4b",
+  "cases": 10,
+  "coercion_on_raw_accuracy": 0.7,
+  "coercion_on_final_accuracy": 1.0,
+  "coercion_off_raw_accuracy": 0.9,
+  "coercion_off_final_accuracy": 0.9,
+  "changed_cases_on": [
+    "case-06",
+    "case-07",
+    "case-10"
+  ],
+  "changed_cases_off": [],
+  "details": [
+    {
+      "case_id": "case-01",
+      "title": "Harborlight Cold Chain",
+      "expected": "HBR-LOCK-731",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"HBR-LOCK-731\"}",
+        "raw_model_extracted": "HBR-LOCK-731",
+        "final_engine_response": "{\"answer\": \"HBR-LOCK-731\"}",
+        "final_engine_extracted": "HBR-LOCK-731",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\n  \"question\": \"For Harborlight Cold Chain Refresh, which production control code was finally approved on September 18, 2025 after replacing HBR-LINK-384? Return the code only.\",\n  \"evidence\": [\n    {\n      \"pass\": \"2\",\n      \"working_t\": \"working-t-17\",\n      \"score\": 1.27,\n      \"content\": \"Case case-01 chunk 9/11: In the final governance session, the committee explicitly retired HBR-LINK-219,",
+        "raw_model_extracted": "HBR-LINK-384",
+        "final_engine_response": "{\n  \"question\": \"For Harborlight Cold Chain Refresh, which production control code was finally approved on September 18, 2025 after replacing HBR-LINK-384? Return the code only.\",\n  \"evidence\": [\n    {\n      \"pass\": \"2\",\n      \"working_t\": \"working-t-17\",\n      \"score\": 1.27,\n      \"content\": \"Case case-01 chunk 9/11: In the final governance session, the committee explicitly retired HBR-LINK-219,",
+        "final_engine_extracted": "HBR-LINK-384",
+        "raw_exact": 0,
+        "final_exact": 0,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-02",
+      "title": "Mesa Fare Reconciliation",
+      "expected": "MNT-FLOW-284",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"MNT-FLOW-284\"}",
+        "raw_model_extracted": "MNT-FLOW-284",
+        "final_engine_response": "{\"answer\": \"MNT-FLOW-284\"}",
+        "final_engine_extracted": "MNT-FLOW-284",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"MNT-FLOW-284\"}",
+        "raw_model_extracted": "MNT-FLOW-284",
+        "final_engine_response": "{\"answer\": \"MNT-FLOW-284\"}",
+        "final_engine_extracted": "MNT-FLOW-284",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-03",
+      "title": "Arcadia Archive Migration",
+      "expected": "ARC-NODE-553",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"ARC-NODE-553\"}",
+        "raw_model_extracted": "ARC-NODE-553",
+        "final_engine_response": "{\"answer\": \"ARC-NODE-553\"}",
+        "final_engine_extracted": "ARC-NODE-553",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"ARC-NODE-553\"}",
+        "raw_model_extracted": "ARC-NODE-553",
+        "final_engine_response": "{\"answer\": \"ARC-NODE-553\"}",
+        "final_engine_extracted": "ARC-NODE-553",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-04",
+      "title": "Delta Grid Dispatch",
+      "expected": "DELTA-ROUTE-909",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"DELTA-ROUTE-909\"}",
+        "raw_model_extracted": "DELTA-ROUTE-909",
+        "final_engine_response": "{\"answer\": \"DELTA-ROUTE-909\"}",
+        "final_engine_extracted": "DELTA-ROUTE-909",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"DELTA-ROUTE-909\"}",
+        "raw_model_extracted": "DELTA-ROUTE-909",
+        "final_engine_response": "{\"answer\": \"DELTA-ROUTE-909\"}",
+        "final_engine_extracted": "DELTA-ROUTE-909",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-05",
+      "title": "Quay Freight Ledger",
+      "expected": "QUAY-BATCH-447",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"QUAY-BATCH-447\"}",
+        "raw_model_extracted": "QUAY-BATCH-447",
+        "final_engine_response": "{\"answer\": \"QUAY-BATCH-447\"}",
+        "final_engine_extracted": "QUAY-BATCH-447",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"QUAY-BATCH-447\"}",
+        "raw_model_extracted": "QUAY-BATCH-447",
+        "final_engine_response": "{\"answer\": \"QUAY-BATCH-447\"}",
+        "final_engine_extracted": "QUAY-BATCH-447",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-06",
+      "title": "Pine Forest Incident Index",
+      "expected": "PINE-INDEX-612",
+      "coercion_on": {
+        "raw_model_response": "{\n  \"question\": \"For Pine Forest Incident Index Rebuild, which production control code was finally approved on June 20, 2025 after replacing PINE-INDEX-577? Return the code only.\",\n  \"evidence\": [\n    \"pass=1 working-t-21 score=1.61: The closeout memo repeated one practical rule for future audits: only PINE-INDEX-612 is considered the authoritative production control for Pine Forest Incident Index Rebuild. | Case case-06 chunk 11/11:",
+        "raw_model_extracted": "PINE-INDEX-577",
+        "final_engine_response": "PINE-INDEX-612",
+        "final_engine_extracted": "PINE-INDEX-612",
+        "raw_exact": 0,
+        "final_exact": 1,
+        "changed_by_engine": true
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"PINE-INDEX-612\"}",
+        "raw_model_extracted": "PINE-INDEX-612",
+        "final_engine_response": "{\"answer\": \"PINE-INDEX-612\"}",
+        "final_engine_extracted": "PINE-INDEX-612",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-07",
+      "title": "Lumen Clinic Slotting",
+      "expected": "LUMEN-SLOT-358",
+      "coercion_on": {
+        "raw_model_response": "{\n  \"question\": \"For Lumen Clinic Slotting Initiative, which production control code was finally approved on May 14, 2025 after replacing LUMEN-SLOT-332? Return the code only.\",\n  \"evidence\": [\n    {\n      \"pass\": \"2\",\n      \"working_t\": \"working-t-17\",\n      \"score\": 1.27,\n      \"content\": \"Case case-07 chunk 9/11: In the final governance session, the committee explicitly retired LUMEN-SLOT-2",
+        "raw_model_extracted": "LUMEN-SLOT-332",
+        "final_engine_response": "LUMEN-SLOT-358",
+        "final_engine_extracted": "LUMEN-SLOT-358",
+        "raw_exact": 0,
+        "final_exact": 1,
+        "changed_by_engine": true
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"LUMEN-SLOT-358\"}",
+        "raw_model_extracted": "LUMEN-SLOT-358",
+        "final_engine_response": "{\"answer\": \"LUMEN-SLOT-358\"}",
+        "final_engine_extracted": "LUMEN-SLOT-358",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-08",
+      "title": "Crown Parcel Mapping",
+      "expected": "CROWN-MAP-774",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"CROWN-MAP-774\"}",
+        "raw_model_extracted": "CROWN-MAP-774",
+        "final_engine_response": "{\"answer\": \"CROWN-MAP-774\"}",
+        "final_engine_extracted": "CROWN-MAP-774",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"CROWN-MAP-774\"}",
+        "raw_model_extracted": "CROWN-MAP-774",
+        "final_engine_response": "{\"answer\": \"CROWN-MAP-774\"}",
+        "final_engine_extracted": "CROWN-MAP-774",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-09",
+      "title": "Ridge Claims Traceability",
+      "expected": "RIDGE-TRACE-265",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\": \"RIDGE-TRACE-265\"}",
+        "raw_model_extracted": "RIDGE-TRACE-265",
+        "final_engine_response": "{\"answer\": \"RIDGE-TRACE-265\"}",
+        "final_engine_extracted": "RIDGE-TRACE-265",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"RIDGE-TRACE-265\"}",
+        "raw_model_extracted": "RIDGE-TRACE-265",
+        "final_engine_response": "{\"answer\": \"RIDGE-TRACE-265\"}",
+        "final_engine_extracted": "RIDGE-TRACE-265",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-10",
+      "title": "Tidal Queue Orchestration",
+      "expected": "TIDAL-QUEUE-801",
+      "coercion_on": {
+        "raw_model_response": "{\n  \"question\": \"For Tidal Queue Orchestration Program, which production control code was finally approved on March 19, 2025 after replacing TIDAL-QUEUE-755? Return the code only.\",\n  \"evidence\": [\n    \"pass=1 working-t-21 score=1.61: The closeout memo repeated one practical rule for future audits: only TIDAL-QUEUE-801 is considered the authoritative production control for Tidal Queue Orchestration Program. | The memo warned that references to TIDAL",
+        "raw_model_extracted": "TIDAL-QUEUE-755",
+        "final_engine_response": "TIDAL-QUEUE-801",
+        "final_engine_extracted": "TIDAL-QUEUE-801",
+        "raw_exact": 0,
+        "final_exact": 1,
+        "changed_by_engine": true
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\": \"TIDAL-QUEUE-801\"}",
+        "raw_model_extracted": "TIDAL-QUEUE-801",
+        "final_engine_response": "{\"answer\": \"TIDAL-QUEUE-801\"}",
+        "final_engine_extracted": "TIDAL-QUEUE-801",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "dataset": {
+    "case_count": 2,
+    "avg_words_per_passage": 1020.0,
+    "min_words_per_passage": 1020,
+    "max_words_per_passage": 1020,
+    "question_preview": "For Harborlight Cold Chain Refresh, after replacing HBR-LINK-384 and retiring HBR-LINK-219, return JSON with keys {\"final_code\",\"approver\",\"final_date\",\"constraint\"}. Use the final approved production tuple only."
+  },
+  "runs": [
+    {
+      "model": "qwen3:0.6b",
+      "mode": "direct",
+      "allow_post_correction": null,
+      "cases": 2,
+      "metrics": {
+        "final_code_accuracy": 1.0,
+        "approver_accuracy": 1.0,
+        "final_date_accuracy": 0.5,
+        "constraint_match_accuracy": 1.0,
+        "all_fields_exact_accuracy": 0.5
+      },
+      "results": [
+        {
+          "case_id": "case-01",
+          "title": "Harborlight Cold Chain",
+          "expected": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "2025-09-18",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "raw_response": "{\n  \"final_code\": \"HBR-LOCK-731\",\n  \"approver\": \"Elena Park\",\n  \"final_date\": \"2025-09-18\",\n  \"constraint\": \"generator transfer times on storm nights\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 0,
+          "constraint_match": 1,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-02",
+          "title": "Mesa Fare Reconciliation",
+          "expected": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m. dispatch"
+          },
+          "predicted": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m. dispatch"
+          },
+          "raw_response": "{\n  \"final_code\": \"MNT-FLOW-284\",\n  \"approver\": \"Darius Molina\",\n  \"final_date\": \"October 2, 2025\",\n  \"constraint\": \"overnight settlement before 4:30 a.m. dispatch\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        }
+      ]
+    },
+    {
+      "model": "qwen3:0.6b",
+      "mode": "memory-orb",
+      "allow_post_correction": false,
+      "cases": 2,
+      "metrics": {
+        "final_code_accuracy": 1.0,
+        "approver_accuracy": 1.0,
+        "final_date_accuracy": 1.0,
+        "constraint_match_accuracy": 1.0,
+        "all_fields_exact_accuracy": 1.0
+      },
+      "results": [
+        {
+          "case_id": "case-01",
+          "title": "Harborlight Cold Chain",
+          "expected": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "raw_response": "{\n  \"final_code\": \"HBR-LOCK-731\",\n  \"approver\": \"Elena Park\",\n  \"final_date\": \"September 18, 2025\",\n  \"constraint\": \"generator transfer times on storm nights\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-02",
+          "title": "Mesa Fare Reconciliation",
+          "expected": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m. dispatch"
+          },
+          "predicted": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m."
+          },
+          "raw_response": "{\n  \"final_code\": \"MNT-FLOW-284\",\n  \"approver\": \"Darius Molina\",\n  \"final_date\": \"October 2, 2025\",\n  \"constraint\": \"overnight settlement before 4:30 a.m.\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        }
+      ]
+    }
+  ]
+}

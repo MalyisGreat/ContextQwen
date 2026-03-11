@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "memory-orb"
+version = "0.1.0"
+description = "Model-agnostic long-term memory swap architecture for bounded LLM contexts."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["memory_orb*"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

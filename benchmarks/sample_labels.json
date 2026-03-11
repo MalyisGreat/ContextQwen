@@ -1,0 +1,902 @@
+[
+  {
+    "seg_id": "seg000",
+    "text": "seg000 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache batch orchestration notebook timeline rollback orchestration orchestration sprint sprint batch rollback owner checklist pipeline notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg001",
+    "text": "seg001 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. queue notebook cache latency orchestration pipeline notebook queue timeline checklist cache owner batch pipeline latency orchestration notebook queue queue",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg002",
+    "text": "seg002 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline notebook pipeline orchestration timeline queue latency queue owner orchestration notebook checklist pipeline sprint sprint cache notebook checklist cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg003",
+    "text": "seg003 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook orchestration timeline pipeline batch orchestration timeline timeline owner rollback checklist queue rollback timeline cache owner timeline batch checklist batch cache latency latency batch batch owner",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg004",
+    "text": "seg004 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch timeline latency cache latency checklist batch batch queue rollback timeline queue pipeline orchestration checklist owner notebook pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg005",
+    "text": "seg005 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback orchestration sprint latency pipeline latency timeline queue pipeline orchestration notebook owner orchestration cache queue timeline checklist batch timeline batch orchestration cache rollback cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg006",
+    "text": "seg006 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook queue timeline orchestration pipeline owner rollback notebook pipeline owner latency rollback batch queue sprint queue timeline rollback sprint rollback notebook orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg007",
+    "text": "seg007 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache latency rollback pipeline sprint rollback latency owner queue rollback latency batch pipeline queue latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg008",
+    "text": "seg008 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline checklist notebook owner pipeline latency timeline queue orchestration checklist batch batch notebook rollback rollback sprint checklist batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg009",
+    "text": "seg009 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration queue latency rollback rollback pipeline owner timeline batch latency queue sprint orchestration orchestration orchestration latency latency timeline sprint timeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg010",
+    "text": "seg010 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency sprint cache owner rollback owner cache rollback checklist timeline pipeline cache latency queue timeline sprint checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg011",
+    "text": "seg011 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. batch timeline latency notebook timeline rollback checklist latency timeline pipeline rollback rollback latency notebook notebook notebook batch batch timeline rollback orchestration rollback batch",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg012",
+    "text": "seg012 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner orchestration orchestration notebook checklist checklist timeline owner queue owner pipeline queue sprint pipeline checklist rollback orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg013",
+    "text": "seg013 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency sprint batch rollback owner rollback checklist notebook owner queue checklist checklist timeline pipeline checklist rollback checklist cache checklist sprint pipeline sprint queue rollback orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg014",
+    "text": "seg014 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist cache notebook owner queue queue latency timeline rollback latency latency checklist checklist rollback checklist rollback orchestration batch orchestration sprint sprint checklist batch rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg015",
+    "text": "seg015 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback cache cache batch cache rollback batch orchestration queue queue cache owner cache batch rollback orchestration pipeline cache rollback queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg016",
+    "text": "seg016 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. owner timeline cache sprint orchestration latency pipeline sprint sprint batch sprint owner queue queue rollback latency batch orchestration queue sprint",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg017",
+    "text": "seg017 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner queue sprint cache timeline sprint orchestration rollback batch rollback pipeline cache cache checklist pipeline orchestration notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg018",
+    "text": "seg018 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint orchestration owner notebook rollback notebook timeline orchestration sprint owner checklist checklist rollback cache cache latency cache orchestration latency cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg019",
+    "text": "seg019 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. timeline pipeline timeline checklist orchestration checklist rollback cache sprint orchestration sprint queue owner orchestration notebook timeline sprint cache checklist latency checklist timeline rollback batch",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg020",
+    "text": "seg020 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch timeline pipeline timeline pipeline sprint checklist batch notebook orchestration batch batch rollback cache batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg021",
+    "text": "seg021 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency queue queue cache checklist rollback pipeline rollback orchestration checklist rollback checklist pipeline latency latency batch timeline latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg022",
+    "text": "seg022 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist checklist owner owner pipeline owner cache batch latency latency queue queue latency cache checklist notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg023",
+    "text": "seg023 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner queue timeline notebook cache checklist owner timeline notebook orchestration checklist owner cache owner latency checklist sprint sprint sprint checklist checklist latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg024",
+    "text": "seg024 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. rollback rollback owner sprint owner pipeline orchestration pipeline cache notebook latency latency notebook latency orchestration batch checklist timeline orchestration pipeline sprint cache sprint",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg025",
+    "text": "seg025 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner latency notebook pipeline latency rollback timeline cache checklist sprint batch owner checklist cache rollback sprint orchestration batch queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg026",
+    "text": "seg026 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. owner sprint orchestration owner notebook checklist latency latency latency batch sprint orchestration sprint checklist pipeline queue",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg027",
+    "text": "seg027 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. timeline latency latency orchestration batch notebook checklist timeline checklist timeline cache rollback sprint cache batch cache timeline timeline cache timeline cache latency cache timeline pipeline notebook",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg028",
+    "text": "seg028 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook sprint rollback timeline sprint rollback timeline orchestration cache checklist sprint sprint orchestration orchestration orchestration latency cache latency pipeline rollback owner sprint queue rollback latency sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg029",
+    "text": "seg029 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. queue latency timeline rollback latency sprint notebook pipeline batch cache latency batch checklist checklist queue latency owner checklist",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg030",
+    "text": "seg030 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue cache orchestration orchestration owner cache cache cache cache notebook orchestration pipeline cache queue rollback pipeline timeline sprint pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg031",
+    "text": "seg031 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback timeline notebook notebook cache checklist timeline cache queue timeline batch batch checklist latency pipeline notebook orchestration notebook latency latency checklist latency timeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg032",
+    "text": "seg032 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner owner queue pipeline timeline sprint timeline orchestration batch timeline orchestration orchestration queue checklist timeline queue notebook queue cache queue pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg033",
+    "text": "seg033 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline sprint rollback queue cache sprint checklist sprint sprint queue rollback orchestration orchestration queue orchestration timeline rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg034",
+    "text": "seg034 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache timeline orchestration sprint owner rollback rollback latency notebook sprint checklist owner latency notebook notebook latency timeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg035",
+    "text": "seg035 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch cache queue pipeline latency notebook sprint sprint orchestration pipeline rollback latency latency checklist notebook owner cache pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg036",
+    "text": "seg036 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline pipeline owner pipeline rollback pipeline timeline queue batch cache cache queue owner sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg037",
+    "text": "seg037 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch queue owner timeline owner latency owner rollback queue orchestration latency sprint checklist rollback sprint cache orchestration queue notebook pipeline orchestration timeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg038",
+    "text": "seg038 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. cache notebook sprint queue cache queue pipeline batch checklist sprint owner timeline cache rollback queue orchestration",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg039",
+    "text": "seg039 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency rollback notebook queue queue orchestration checklist queue sprint checklist cache latency notebook batch rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg040",
+    "text": "seg040 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook owner notebook latency timeline rollback rollback checklist queue timeline rollback sprint timeline notebook sprint cache timeline latency queue sprint pipeline batch cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg041",
+    "text": "seg041 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook sprint timeline orchestration checklist timeline notebook cache owner timeline timeline timeline owner sprint sprint orchestration rollback sprint rollback pipeline pipeline queue sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg042",
+    "text": "seg042 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook queue checklist batch orchestration orchestration notebook timeline orchestration batch batch sprint checklist latency owner sprint timeline orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg043",
+    "text": "seg043 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner queue pipeline timeline latency cache owner pipeline timeline checklist notebook checklist batch batch cache sprint orchestration orchestration pipeline latency queue timeline latency batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg044",
+    "text": "seg044 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline latency orchestration orchestration notebook orchestration latency checklist pipeline batch sprint sprint batch rollback batch owner owner",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg045",
+    "text": "seg045 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline notebook timeline cache orchestration rollback sprint cache timeline checklist batch latency latency batch sprint notebook owner timeline pipeline rollback owner notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg046",
+    "text": "seg046 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch orchestration orchestration pipeline latency owner timeline rollback timeline batch pipeline timeline owner rollback queue cache owner pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg047",
+    "text": "seg047 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline timeline sprint pipeline pipeline batch cache checklist orchestration cache queue timeline pipeline timeline notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg048",
+    "text": "seg048 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. queue sprint orchestration orchestration notebook queue cache latency queue rollback rollback owner pipeline latency checklist owner latency orchestration rollback timeline",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg049",
+    "text": "seg049 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. queue rollback rollback pipeline queue checklist timeline cache notebook pipeline batch timeline checklist orchestration notebook batch checklist",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg050",
+    "text": "seg050 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback notebook orchestration owner latency latency latency timeline checklist batch cache timeline pipeline pipeline checklist rollback sprint latency orchestration timeline checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg051",
+    "text": "seg051 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline pipeline rollback queue sprint notebook owner batch batch timeline pipeline rollback cache checklist pipeline sprint owner sprint timeline sprint sprint owner",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg052",
+    "text": "seg052 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist checklist notebook latency pipeline notebook orchestration timeline checklist checklist sprint cache timeline orchestration owner notebook pipeline owner checklist owner checklist timeline latency rollback latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg053",
+    "text": "seg053 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue queue pipeline cache checklist cache cache pipeline owner pipeline timeline latency rollback rollback latency checklist pipeline timeline notebook cache batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg054",
+    "text": "seg054 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline timeline owner latency checklist owner pipeline queue queue latency sprint latency cache pipeline queue checklist timeline pipeline pipeline notebook rollback checklist queue pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg055",
+    "text": "seg055 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback batch owner orchestration queue owner orchestration notebook orchestration owner rollback owner timeline batch rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg056",
+    "text": "seg056 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. checklist latency owner latency cache sprint sprint timeline orchestration timeline pipeline batch sprint checklist latency pipeline queue sprint cache sprint cache queue owner notebook orchestration",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg057",
+    "text": "seg057 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. cache notebook batch cache pipeline latency cache orchestration pipeline orchestration sprint owner timeline owner latency rollback latency pipeline latency rollback timeline latency latency cache notebook notebook",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg058",
+    "text": "seg058 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback timeline queue checklist notebook checklist timeline owner timeline checklist pipeline timeline queue notebook notebook batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg059",
+    "text": "seg059 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline timeline sprint owner owner checklist cache pipeline rollback checklist checklist checklist owner timeline notebook rollback checklist timeline sprint queue latency pipeline owner latency pipeline cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg060",
+    "text": "seg060 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue sprint owner checklist notebook cache checklist checklist owner latency queue queue queue checklist sprint cache notebook owner owner sprint latency pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg061",
+    "text": "seg061 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist batch pipeline cache owner checklist checklist timeline notebook orchestration timeline notebook timeline rollback queue cache rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg062",
+    "text": "seg062 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. orchestration owner timeline owner pipeline notebook checklist batch rollback owner timeline sprint cache orchestration checklist sprint rollback pipeline notebook batch sprint owner checklist",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg063",
+    "text": "seg063 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint rollback timeline notebook notebook owner owner checklist checklist rollback cache sprint latency cache orchestration timeline orchestration notebook sprint owner orchestration orchestration cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg064",
+    "text": "seg064 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback latency sprint owner cache notebook sprint pipeline rollback batch checklist queue orchestration orchestration timeline sprint orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg065",
+    "text": "seg065 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration rollback checklist latency queue timeline checklist checklist orchestration cache notebook orchestration orchestration owner checklist latency orchestration orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg066",
+    "text": "seg066 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration queue timeline owner checklist notebook batch owner orchestration batch rollback rollback rollback sprint owner cache batch owner queue latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg067",
+    "text": "seg067 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. latency owner cache owner sprint rollback owner notebook batch notebook cache rollback orchestration timeline timeline checklist timeline notebook batch sprint cache orchestration",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg068",
+    "text": "seg068 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue rollback orchestration pipeline orchestration queue sprint rollback orchestration orchestration sprint batch pipeline cache owner timeline orchestration pipeline sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg069",
+    "text": "seg069 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline checklist timeline orchestration notebook cache checklist cache latency latency sprint notebook orchestration checklist pipeline notebook latency orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg070",
+    "text": "seg070 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner notebook checklist timeline rollback rollback cache notebook checklist sprint orchestration orchestration queue rollback notebook batch checklist batch queue timeline checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg071",
+    "text": "seg071 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. orchestration rollback latency cache checklist orchestration queue cache queue checklist timeline orchestration rollback owner",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg072",
+    "text": "seg072 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint sprint timeline sprint timeline latency timeline notebook checklist sprint latency batch orchestration batch queue notebook notebook checklist queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg073",
+    "text": "seg073 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline cache queue batch checklist orchestration checklist queue pipeline sprint cache rollback latency cache notebook orchestration latency sprint checklist checklist cache orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg074",
+    "text": "seg074 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache notebook notebook notebook batch pipeline timeline owner checklist cache checklist notebook checklist timeline sprint pipeline sprint batch latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg075",
+    "text": "seg075 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. orchestration latency checklist rollback owner timeline pipeline timeline rollback cache latency batch owner latency checklist latency queue sprint owner cache rollback",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg076",
+    "text": "seg076 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch checklist timeline batch latency rollback owner rollback checklist timeline pipeline checklist sprint timeline timeline batch rollback orchestration timeline pipeline queue timeline owner",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg077",
+    "text": "seg077 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. notebook latency batch sprint notebook batch checklist owner notebook batch cache notebook orchestration pipeline timeline owner notebook latency queue owner batch pipeline",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg078",
+    "text": "seg078 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration orchestration sprint sprint orchestration latency cache timeline rollback timeline timeline timeline queue timeline rollback queue queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg079",
+    "text": "seg079 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency queue cache timeline batch orchestration timeline orchestration batch owner batch notebook orchestration pipeline queue pipeline rollback sprint latency sprint timeline orchestration pipeline notebook notebook checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg080",
+    "text": "seg080 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue timeline batch sprint rollback sprint owner pipeline cache owner latency orchestration checklist checklist rollback cache owner sprint cache batch notebook latency cache batch batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg081",
+    "text": "seg081 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. queue batch timeline timeline timeline checklist sprint owner timeline cache timeline notebook sprint orchestration owner cache checklist latency checklist rollback latency batch latency",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg082",
+    "text": "seg082 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. orchestration orchestration latency orchestration queue notebook batch owner batch timeline sprint orchestration timeline cache orchestration rollback",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg083",
+    "text": "seg083 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline timeline sprint timeline cache queue rollback queue rollback sprint cache cache rollback cache rollback latency cache timeline orchestration batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg084",
+    "text": "seg084 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint cache timeline owner latency notebook sprint queue pipeline queue timeline orchestration queue orchestration queue timeline pipeline pipeline owner queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg085",
+    "text": "seg085 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch batch owner pipeline notebook queue orchestration timeline notebook rollback latency timeline notebook sprint orchestration latency batch checklist checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg086",
+    "text": "seg086 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline queue cache batch timeline sprint cache sprint rollback queue batch queue checklist cache timeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg087",
+    "text": "seg087 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook orchestration cache sprint orchestration pipeline owner owner checklist pipeline batch batch pipeline orchestration queue batch batch rollback notebook rollback pipeline orchestration latency latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg088",
+    "text": "seg088 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue timeline cache timeline latency rollback orchestration timeline pipeline latency timeline rollback sprint rollback rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg089",
+    "text": "seg089 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. checklist checklist batch orchestration orchestration owner orchestration orchestration timeline batch batch checklist notebook rollback latency timeline timeline queue rollback sprint orchestration batch checklist orchestration latency owner",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg090",
+    "text": "seg090 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline cache cache orchestration owner orchestration pipeline queue pipeline cache batch checklist cache timeline batch cache cache latency notebook sprint sprint owner pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg091",
+    "text": "seg091 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline checklist cache notebook latency owner timeline rollback checklist notebook pipeline latency notebook sprint notebook sprint orchestration pipeline sprint notebook pipeline timeline checklist queue pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg092",
+    "text": "seg092 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. notebook checklist rollback rollback batch cache checklist owner checklist queue batch pipeline notebook pipeline pipeline sprint queue latency owner",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg093",
+    "text": "seg093 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch checklist timeline sprint queue orchestration sprint orchestration checklist rollback rollback batch sprint timeline queue owner notebook checklist owner cache rollback cache cache timeline notebook queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg094",
+    "text": "seg094 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. owner notebook owner cache sprint cache queue timeline owner cache rollback batch sprint sprint latency",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg095",
+    "text": "seg095 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist pipeline rollback timeline timeline rollback notebook notebook notebook owner latency pipeline sprint timeline checklist timeline batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg096",
+    "text": "seg096 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency orchestration batch pipeline checklist pipeline owner owner cache cache orchestration checklist sprint pipeline notebook orchestration orchestration batch cache queue sprint notebook queue notebook checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg097",
+    "text": "seg097 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency rollback cache notebook latency pipeline checklist batch timeline checklist queue owner pipeline orchestration notebook queue rollback sprint pipeline rollback owner",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg098",
+    "text": "seg098 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback orchestration timeline cache latency pipeline queue sprint sprint notebook timeline orchestration orchestration checklist notebook orchestration pipeline latency pipeline orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg099",
+    "text": "seg099 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline cache sprint pipeline notebook batch notebook batch sprint queue timeline orchestration owner cache cache rollback latency pipeline owner orchestration latency sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg100",
+    "text": "seg100 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook cache latency owner rollback checklist cache owner orchestration sprint owner checklist notebook timeline pipeline rollback timeline queue batch pipeline orchestration orchestration latency queue latency batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg101",
+    "text": "seg101 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. latency rollback queue latency orchestration rollback batch timeline sprint notebook orchestration notebook owner owner batch owner orchestration sprint orchestration batch orchestration orchestration",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg102",
+    "text": "seg102 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue cache queue latency sprint orchestration pipeline cache notebook batch cache sprint orchestration pipeline cache pipeline notebook notebook pipeline timeline pipeline latency owner sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg103",
+    "text": "seg103 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache timeline cache cache batch cache queue queue timeline timeline queue batch owner timeline queue pipeline queue timeline rollback sprint pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg104",
+    "text": "seg104 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint sprint pipeline pipeline rollback rollback latency sprint pipeline pipeline orchestration queue sprint latency sprint cache checklist notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg105",
+    "text": "seg105 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook orchestration checklist timeline queue latency pipeline batch batch queue notebook orchestration owner batch owner checklist cache checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg106",
+    "text": "seg106 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint cache timeline orchestration owner notebook notebook queue queue notebook pipeline cache pipeline checklist queue checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg107",
+    "text": "seg107 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache cache timeline notebook pipeline cache queue rollback rollback notebook pipeline owner checklist checklist checklist pipeline sprint rollback cache queue latency timeline latency pipeline pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg108",
+    "text": "seg108 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency rollback owner checklist rollback sprint owner batch batch sprint notebook notebook cache queue batch latency checklist batch orchestration timeline batch orchestration cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg109",
+    "text": "seg109 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook cache timeline cache timeline pipeline checklist notebook sprint checklist rollback timeline queue batch pipeline sprint owner notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg110",
+    "text": "seg110 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook orchestration cache owner notebook notebook rollback notebook sprint checklist checklist notebook rollback pipeline queue orchestration notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg111",
+    "text": "seg111 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline sprint latency orchestration pipeline sprint latency checklist owner owner checklist orchestration latency sprint owner latency cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg112",
+    "text": "seg112 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache timeline orchestration notebook timeline notebook owner cache latency timeline queue queue batch owner owner sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg113",
+    "text": "seg113 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. owner pipeline queue rollback latency orchestration owner timeline orchestration sprint notebook pipeline cache latency pipeline cache rollback cache timeline sprint cache notebook queue notebook pipeline",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg114",
+    "text": "seg114 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache owner pipeline rollback cache checklist owner sprint orchestration batch notebook batch latency orchestration orchestration cache timeline pipeline sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg115",
+    "text": "seg115 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline rollback pipeline notebook rollback checklist checklist cache notebook queue latency timeline orchestration queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg116",
+    "text": "seg116 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration batch queue owner cache timeline queue owner orchestration timeline batch sprint latency rollback checklist orchestration sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg117",
+    "text": "seg117 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback rollback orchestration latency pipeline queue orchestration owner cache rollback queue checklist batch checklist rollback queue orchestration checklist checklist timeline pipeline sprint batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg118",
+    "text": "seg118 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline owner rollback rollback notebook orchestration queue latency pipeline batch batch queue timeline notebook sprint pipeline rollback rollback pipeline pipeline owner orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg119",
+    "text": "seg119 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook queue owner notebook owner queue orchestration batch orchestration queue latency pipeline latency pipeline latency batch batch cache pipeline sprint queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg120",
+    "text": "seg120 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline cache rollback cache cache timeline queue latency latency latency timeline queue timeline pipeline latency cache checklist cache checklist checklist rollback owner queue checklist owner",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg121",
+    "text": "seg121 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook orchestration batch sprint notebook orchestration latency timeline checklist pipeline orchestration timeline batch batch sprint queue checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg122",
+    "text": "seg122 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. checklist timeline rollback batch timeline orchestration orchestration orchestration notebook notebook checklist orchestration checklist pipeline notebook rollback latency batch pipeline cache",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg123",
+    "text": "seg123 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. queue queue checklist orchestration batch rollback queue owner pipeline rollback orchestration owner timeline queue pipeline pipeline",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg124",
+    "text": "seg124 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration latency sprint cache sprint sprint pipeline queue checklist cache notebook cache checklist pipeline batch",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg125",
+    "text": "seg125 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency orchestration pipeline batch rollback batch latency checklist timeline cache batch orchestration queue timeline checklist latency queue notebook orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg126",
+    "text": "seg126 Planning note: oauth appears in this workstream and needs follow-up owners for next sprint checkpoints. cache latency sprint pipeline queue orchestration queue orchestration latency notebook owner batch sprint queue rollback notebook pipeline rollback cache queue",
+    "importance": 0.6,
+    "kind": "medium"
+  },
+  {
+    "seg_id": "seg127",
+    "text": "seg127 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist owner orchestration timeline checklist sprint latency sprint owner owner batch batch sprint checklist orchestration checklist rollback pipeline pipeline latency pipeline rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg128",
+    "text": "seg128 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook orchestration queue latency queue orchestration rollback sprint cache checklist latency sprint rollback batch timeline orchestration pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg129",
+    "text": "seg129 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. notebook latency cache rollback timeline sprint sprint timeline pipeline sprint batch batch batch rollback sprint sprint rollback cache orchestration",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg130",
+    "text": "seg130 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline rollback owner pipeline notebook notebook rollback orchestration timeline rollback notebook notebook pipeline pipeline notebook cache batch queue sprint batch timeline batch checklist queue rollback queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg131",
+    "text": "seg131 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. batch cache owner rollback rollback cache batch notebook batch checklist checklist rollback cache timeline owner notebook queue notebook pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg132",
+    "text": "seg132 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint batch orchestration latency owner pipeline checklist batch timeline orchestration sprint batch latency checklist rollback queue notebook cache checklist cache rollback checklist batch batch queue",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg133",
+    "text": "seg133 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue latency pipeline rollback latency batch rollback rollback owner notebook queue notebook pipeline rollback owner checklist owner checklist batch latency sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg134",
+    "text": "seg134 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. notebook owner latency pipeline queue latency pipeline batch cache latency owner cache sprint notebook rollback sprint orchestration owner queue queue orchestration timeline latency orchestration rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg135",
+    "text": "seg135 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration latency queue batch notebook batch owner batch orchestration pipeline cache rollback orchestration owner batch queue timeline timeline orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg136",
+    "text": "seg136 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. timeline notebook sprint timeline timeline rollback batch orchestration orchestration orchestration batch sprint notebook batch checklist queue rollback owner queue rollback pipeline latency queue cache",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg137",
+    "text": "seg137 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. checklist owner orchestration batch batch checklist owner timeline checklist queue checklist checklist timeline rollback orchestration latency batch sprint queue timeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg138",
+    "text": "seg138 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. pipeline timeline notebook queue cache orchestration cache rollback timeline rollback owner rollback cache owner rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg139",
+    "text": "seg139 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback rollback rollback orchestration cache queue rollback checklist cache timeline sprint orchestration rollback rollback",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg140",
+    "text": "seg140 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint owner pipeline queue batch queue sprint queue latency owner batch queue batch rollback notebook notebook owner sprint pipeline checklist pipeline orchestration",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg141",
+    "text": "seg141 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. latency orchestration notebook rollback pipeline queue orchestration notebook pipeline timeline checklist orchestration rollback timeline timeline timeline owner timeline owner checklist sprint",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg142",
+    "text": "seg142 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache pipeline rollback batch timeline orchestration batch checklist rollback owner timeline sprint latency orchestration latency pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg143",
+    "text": "seg143 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. queue rollback pipeline queue queue batch checklist rollback cache owner notebook sprint sprint notebook notebook notebook orchestration pipeline orchestration orchestration pipeline owner notebook owner batch checklist",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg144",
+    "text": "seg144 Historical note: oauth is mentioned in archived docs but not tied to the current execution plan. rollback pipeline cache pipeline timeline sprint timeline sprint owner rollback rollback checklist rollback batch owner latency sprint sprint",
+    "importance": 0.2,
+    "kind": "decoy"
+  },
+  {
+    "seg_id": "seg145",
+    "text": "seg145 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. sprint notebook sprint queue latency rollback batch cache orchestration sprint pipeline latency timeline checklist owner latency sprint checklist sprint latency orchestration sprint notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg146",
+    "text": "seg146 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. rollback owner timeline sprint rollback batch notebook sprint owner sprint notebook timeline rollback sprint notebook sprint cache latency latency latency checklist notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg147",
+    "text": "seg147 Action note: oauth requires immediate mitigation. Run verification, canary release, and alert thresholds before production cutover. batch orchestration timeline owner timeline queue latency batch pipeline timeline sprint queue checklist latency orchestration pipeline queue notebook queue checklist latency timeline",
+    "importance": 1.0,
+    "kind": "high"
+  },
+  {
+    "seg_id": "seg148",
+    "text": "seg148 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. cache latency queue latency orchestration sprint pipeline pipeline rollback checklist notebook rollback orchestration cache pipeline rollback sprint batch notebook",
+    "importance": 0.0,
+    "kind": "noise"
+  },
+  {
+    "seg_id": "seg149",
+    "text": "seg149 General project chatter about unrelated status updates, documentation cleanup, and routine standup summaries. orchestration pipeline pipeline pipeline sprint latency timeline pipeline rollback queue cache checklist pipeline batch queue queue rollback queue batch latency cache pipeline latency orchestration rollback pipeline",
+    "importance": 0.0,
+    "kind": "noise"
+  }
+]

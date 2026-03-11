@@ -1,0 +1,103 @@
+{
+  "dataset": {
+    "case_count": 10,
+    "avg_words_per_passage": 978.8,
+    "min_words_per_passage": 975,
+    "max_words_per_passage": 982,
+    "question_examples": [
+      "For Harborlight Cold Chain Refresh, which production control code was finally approved on September 18, 2025 after replacing HBR-LINK-384? Return the code only.",
+      "For Mesa Fare Reconciliation Upgrade, which production control code was finally approved on October 2, 2025 after replacing MNT-FLOW-246? Return the code only."
+    ]
+  },
+  "runs": [
+    {
+      "model": "qwen3:4b",
+      "mode": "memory-orb",
+      "allow_post_correction": true,
+      "cases": 10,
+      "exact_match_accuracy": 1.0,
+      "results": [
+        {
+          "case_id": "case-01",
+          "title": "Harborlight Cold Chain",
+          "expected": "HBR-LOCK-731",
+          "predicted": "HBR-LOCK-731",
+          "raw_response": "{\"answer\": \"HBR-LOCK-731\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-02",
+          "title": "Mesa Fare Reconciliation",
+          "expected": "MNT-FLOW-284",
+          "predicted": "MNT-FLOW-284",
+          "raw_response": "{\"answer\": \"MNT-FLOW-284\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-03",
+          "title": "Arcadia Archive Migration",
+          "expected": "ARC-NODE-553",
+          "predicted": "ARC-NODE-553",
+          "raw_response": "{\"answer\": \"ARC-NODE-553\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-04",
+          "title": "Delta Grid Dispatch",
+          "expected": "DELTA-ROUTE-909",
+          "predicted": "DELTA-ROUTE-909",
+          "raw_response": "{\"answer\": \"DELTA-ROUTE-909\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-05",
+          "title": "Quay Freight Ledger",
+          "expected": "QUAY-BATCH-447",
+          "predicted": "QUAY-BATCH-447",
+          "raw_response": "{\"answer\": \"QUAY-BATCH-447\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-06",
+          "title": "Pine Forest Incident Index",
+          "expected": "PINE-INDEX-612",
+          "predicted": "PINE-INDEX-612",
+          "raw_response": "{\"answer\": \"PINE-INDEX-612\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-07",
+          "title": "Lumen Clinic Slotting",
+          "expected": "LUMEN-SLOT-358",
+          "predicted": "LUMEN-SLOT-358",
+          "raw_response": "{\"answer\": \"LUMEN-SLOT-358\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-08",
+          "title": "Crown Parcel Mapping",
+          "expected": "CROWN-MAP-774",
+          "predicted": "CROWN-MAP-774",
+          "raw_response": "{\"answer\": \"CROWN-MAP-774\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-09",
+          "title": "Ridge Claims Traceability",
+          "expected": "RIDGE-TRACE-265",
+          "predicted": "RIDGE-TRACE-265",
+          "raw_response": "{\"answer\": \"RIDGE-TRACE-265\"}",
+          "exact_match": 1
+        },
+        {
+          "case_id": "case-10",
+          "title": "Tidal Queue Orchestration",
+          "expected": "TIDAL-QUEUE-801",
+          "predicted": "TIDAL-QUEUE-801",
+          "raw_response": "TIDAL-QUEUE-801",
+          "exact_match": 1
+        }
+      ]
+    }
+  ]
+}

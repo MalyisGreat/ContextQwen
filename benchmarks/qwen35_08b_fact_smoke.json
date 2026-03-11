@@ -1,0 +1,23 @@
+{
+  "trials": 1,
+  "memory_orb_model": "qwen3.5:0.8b",
+  "long_context_model": "qwen3.5:0.8b",
+  "long_context_window": 262144,
+  "memory_orb_exact_match": 1,
+  "long_context_exact_match": 1,
+  "delta_memory_orb_minus_long_ctx": 0,
+  "records_per_trial": 260,
+  "noise_segments_per_trial": 700,
+  "results": [
+    {
+      "trial_id": "trial-000",
+      "expected": "queue-gold",
+      "memory_orb_answer_raw": "{\"value\":\"queue-gold\"}",
+      "long_ctx_answer_raw": "{\"value\":\"queue-gold\"}",
+      "memory_orb_answer": "queue-gold",
+      "long_ctx_answer": "queue-gold",
+      "memory_orb_exact": 1,
+      "long_ctx_exact": 1
+    }
+  ]
+}

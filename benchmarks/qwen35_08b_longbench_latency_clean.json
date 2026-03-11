@@ -1,0 +1,48 @@
+{
+  "benchmark": "longbench_v2_short_same_model_latency",
+  "model": "qwen3.5:0.8b",
+  "cases": 5,
+  "direct_mean_s": 42.55,
+  "direct_median_s": 45.92,
+  "memory_mean_s": 5.54,
+  "memory_median_s": 4.85,
+  "memory_minus_direct_mean_s": -37.01,
+  "memory_over_direct_ratio_mean": 0.13,
+  "per_case": [
+    {
+      "case_id": "66f3918f821e116aacb2d8b7",
+      "direct_s": 53.08,
+      "memory_s": 9.35,
+      "delta_s": -43.73,
+      "ratio": 0.18
+    },
+    {
+      "case_id": "66f96115bb02136c067c541c",
+      "direct_s": 45.92,
+      "memory_s": 4.85,
+      "delta_s": -41.06,
+      "ratio": 0.11
+    },
+    {
+      "case_id": "67062a63bb02136c067cf5ac",
+      "direct_s": 49.34,
+      "memory_s": 4.54,
+      "delta_s": -44.8,
+      "ratio": 0.09
+    },
+    {
+      "case_id": "66ec18a7821e116aacb1a72e",
+      "direct_s": 37.36,
+      "memory_s": 4.03,
+      "delta_s": -33.33,
+      "ratio": 0.11
+    },
+    {
+      "case_id": "66ec3a46821e116aacb1c49f",
+      "direct_s": 27.05,
+      "memory_s": 4.91,
+      "delta_s": -22.13,
+      "ratio": 0.18
+    }
+  ]
+}

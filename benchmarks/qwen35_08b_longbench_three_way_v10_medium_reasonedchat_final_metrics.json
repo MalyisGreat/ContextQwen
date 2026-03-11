@@ -1,0 +1,12 @@
+﻿{
+    "metrics":  {
+                    "heuristic_mean_latency_s":  5.7,
+                    "reasoned_minus_heuristic":  0.1,
+                    "reasoned_accuracy":  0.3,
+                    "reasoned_minus_direct":  0,
+                    "direct_accuracy":  0.3,
+                    "reasoned_mean_latency_s":  6.157,
+                    "direct_mean_latency_s":  164.135,
+                    "heuristic_accuracy":  0.2
+                }
+}

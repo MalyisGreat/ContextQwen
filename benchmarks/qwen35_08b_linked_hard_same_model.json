@@ -1,0 +1,481 @@
+{
+  "dataset": {
+    "case_count": 10,
+    "avg_words_per_passage": 1019.4,
+    "min_words_per_passage": 1013,
+    "max_words_per_passage": 1023,
+    "question_preview": "For Harborlight Cold Chain Refresh, after replacing HBR-LINK-384 and retiring HBR-LINK-219, return JSON with keys {\"final_code\",\"approver\",\"final_date\",\"constraint\"}. Use the final approved production tuple only."
+  },
+  "runs": [
+    {
+      "model": "qwen3.5:0.8b",
+      "mode": "direct",
+      "allow_post_correction": null,
+      "cases": 10,
+      "metrics": {
+        "final_code_accuracy": 1.0,
+        "approver_accuracy": 1.0,
+        "final_date_accuracy": 1.0,
+        "constraint_match_accuracy": 1.0,
+        "all_fields_exact_accuracy": 1.0
+      },
+      "results": [
+        {
+          "case_id": "case-01",
+          "title": "Harborlight Cold Chain",
+          "expected": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "raw_response": "{\n  \"final_code\": \"HBR-LOCK-731\",\n  \"approver\": \"Elena Park\",\n  \"final_date\": \"September 18, 2025\",\n  \"constraint\": \"generator transfer times on storm nights\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-02",
+          "title": "Mesa Fare Reconciliation",
+          "expected": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m. dispatch"
+          },
+          "predicted": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m. dispatch"
+          },
+          "raw_response": "{\n  \"final_code\": \"MNT-FLOW-284\",\n  \"approver\": \"Darius Molina\",\n  \"final_date\": \"October 2, 2025\",\n  \"constraint\": \"overnight settlement before 4:30 a.m. dispatch\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-03",
+          "title": "Arcadia Archive Migration",
+          "expected": {
+            "final_code": "ARC-NODE-553",
+            "approver": "Maya Jennings",
+            "final_date": "August 27, 2025",
+            "constraint": "legal hold windows during filing season"
+          },
+          "predicted": {
+            "final_code": "ARC-NODE-553",
+            "approver": "Maya Jennings",
+            "final_date": "August 27, 2025",
+            "constraint": "legal hold windows during filing season"
+          },
+          "raw_response": "{\n  \"final_code\": \"ARC-NODE-553\",\n  \"approver\": \"Maya Jennings\",\n  \"final_date\": \"August 27, 2025\",\n  \"constraint\": \"legal hold windows during filing season\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-04",
+          "title": "Delta Grid Dispatch",
+          "expected": {
+            "final_code": "DELTA-ROUTE-909",
+            "approver": "Noah Finley",
+            "final_date": "July 11, 2025",
+            "constraint": "peaker unit spin-up latency under heat alerts"
+          },
+          "predicted": {
+            "final_code": "DELTA-ROUTE-909",
+            "approver": "Noah Finley",
+            "final_date": "July 11, 2025",
+            "constraint": "peaker unit spin-up latency under heat alerts"
+          },
+          "raw_response": "{\n  \"final_code\": \"DELTA-ROUTE-909\",\n  \"approver\": \"Noah Finley\",\n  \"final_date\": \"July 11, 2025\",\n  \"constraint\": \"peaker unit spin-up latency under heat alerts\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-05",
+          "title": "Quay Freight Ledger",
+          "expected": {
+            "final_code": "QUAY-BATCH-447",
+            "approver": "Rina Talbot",
+            "final_date": "November 6, 2025",
+            "constraint": "cross-midnight customs manifests"
+          },
+          "predicted": {
+            "final_code": "QUAY-BATCH-447",
+            "approver": "Rina Talbot",
+            "final_date": "November 6, 2025",
+            "constraint": "cross-midnight customs manifests"
+          },
+          "raw_response": "{\n  \"final_code\": \"QUAY-BATCH-447\",\n  \"approver\": \"Rina Talbot\",\n  \"final_date\": \"November 6, 2025\",\n  \"constraint\": \"cross-midnight customs manifests\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-06",
+          "title": "Pine Forest Incident Index",
+          "expected": {
+            "final_code": "PINE-INDEX-612",
+            "approver": "Gavin Chen",
+            "final_date": "June 20, 2025",
+            "constraint": "radio dead spots in canyon sectors"
+          },
+          "predicted": {
+            "final_code": "PINE-INDEX-612",
+            "approver": "Gavin Chen",
+            "final_date": "June 20, 2025",
+            "constraint": "radio dead spots in canyon sectors"
+          },
+          "raw_response": "{\n  \"final_code\": \"PINE-INDEX-612\",\n  \"approver\": \"Gavin Chen\",\n  \"final_date\": \"June 20, 2025\",\n  \"constraint\": \"radio dead spots in canyon sectors\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-07",
+          "title": "Lumen Clinic Slotting",
+          "expected": {
+            "final_code": "LUMEN-SLOT-358",
+            "approver": "Priya Nandakumar",
+            "final_date": "May 14, 2025",
+            "constraint": "insurance cutoff timestamps in local time"
+          },
+          "predicted": {
+            "final_code": "LUMEN-SLOT-358",
+            "approver": "Priya Nandakumar",
+            "final_date": "May 14, 2025",
+            "constraint": "insurance cutoff timestamps in local time"
+          },
+          "raw_response": "{\n  \"final_code\": \"LUMEN-SLOT-358\",\n  \"approver\": \"Priya Nandakumar\",\n  \"final_date\": \"May 14, 2025\",\n  \"constraint\": \"insurance cutoff timestamps in local time\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-08",
+          "title": "Crown Parcel Mapping",
+          "expected": {
+            "final_code": "CROWN-MAP-774",
+            "approver": "Luis Herrera",
+            "final_date": "December 1, 2025",
+            "constraint": "frozen-road detours in winter dispatch"
+          },
+          "predicted": {
+            "final_code": "CROWN-MAP-774",
+            "approver": "Luis Herrera",
+            "final_date": "December 1, 2025",
+            "constraint": "frozen-road detours in winter dispatch"
+          },
+          "raw_response": "{\n  \"final_code\": \"CROWN-MAP-774\",\n  \"approver\": \"Luis Herrera\",\n  \"final_date\": \"December 1, 2025\",\n  \"constraint\": \"frozen-road detours in winter dispatch\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-09",
+          "title": "Ridge Claims Traceability",
+          "expected": {
+            "final_code": "RIDGE-TRACE-265",
+            "approver": "Avery Bishop",
+            "final_date": "April 29, 2025",
+            "constraint": "regulatory callback windows after major storms"
+          },
+          "predicted": {
+            "final_code": "RIDGE-TRACE-265",
+            "approver": "Avery Bishop",
+            "final_date": "April 29, 2025",
+            "constraint": "regulatory callback windows after major storms"
+          },
+          "raw_response": "{\n  \"final_code\": \"RIDGE-TRACE-265\",\n  \"approver\": \"Avery Bishop\",\n  \"final_date\": \"April 29, 2025\",\n  \"constraint\": \"regulatory callback windows after major storms\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-10",
+          "title": "Tidal Queue Orchestration",
+          "expected": {
+            "final_code": "TIDAL-QUEUE-801",
+            "approver": "Sofia Alvarez",
+            "final_date": "March 19, 2025",
+            "constraint": "cold-room handoff deadlines before assay expiration"
+          },
+          "predicted": {
+            "final_code": "TIDAL-QUEUE-801",
+            "approver": "Sofia Alvarez",
+            "final_date": "March 19, 2025",
+            "constraint": "cold-room handoff deadlines before assay expiration"
+          },
+          "raw_response": "{\n  \"final_code\": \"TIDAL-QUEUE-801\",\n  \"approver\": \"Sofia Alvarez\",\n  \"final_date\": \"March 19, 2025\",\n  \"constraint\": \"cold-room handoff deadlines before assay expiration\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        }
+      ]
+    },
+    {
+      "model": "qwen3.5:0.8b",
+      "mode": "memory-orb",
+      "allow_post_correction": false,
+      "cases": 10,
+      "metrics": {
+        "final_code_accuracy": 0.9,
+        "approver_accuracy": 0.7,
+        "final_date_accuracy": 0.5,
+        "constraint_match_accuracy": 0.2,
+        "all_fields_exact_accuracy": 0.2
+      },
+      "results": [
+        {
+          "case_id": "case-01",
+          "title": "Harborlight Cold Chain",
+          "expected": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "2025-09-18",
+            "constraint": "production"
+          },
+          "raw_response": "{\n  \"final_code\": \"HBR-LOCK-731\",\n  \"approver\": \"Elena Park\",\n  \"final_date\": \"2025-09-18\",\n  \"constraint\": \"production\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 0,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-02",
+          "title": "Mesa Fare Reconciliation",
+          "expected": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "Darius Molina",
+            "final_date": "October 2, 2025",
+            "constraint": "overnight settlement before 4:30 a.m. dispatch"
+          },
+          "predicted": {
+            "final_code": "MNT-FLOW-284",
+            "approver": "APPROVED-FOR-PRODUCTION",
+            "final_date": "2023-10-15",
+            "constraint": "Mesa Fare Reconciliation Upgrade"
+          },
+          "raw_response": "{\"final_code\":\"MNT-FLOW-284\",\"approver\":\"APPROVED-FOR-PRODUCTION\",\"final_date\":\"2023-10-15\",\"constraint\":\"Mesa Fare Reconciliation Upgrade\"}",
+          "final_code_exact": 1,
+          "approver_exact": 0,
+          "final_date_exact": 0,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-03",
+          "title": "Arcadia Archive Migration",
+          "expected": {
+            "final_code": "ARC-NODE-553",
+            "approver": "Maya Jennings",
+            "final_date": "August 27, 2025",
+            "constraint": "legal hold windows during filing season"
+          },
+          "predicted": {
+            "final_code": "ARC-DRAFT-754",
+            "approver": "Case case-03 chunk 2/9",
+            "final_date": "2024-01-15",
+            "constraint": "production"
+          },
+          "raw_response": "{\n  \"final_code\": \"ARC-DRAFT-754\",\n  \"approver\": \"Case case-03 chunk 2/9\",\n  \"final_date\": \"2024-01-15\",\n  \"constraint\": \"production\"\n}",
+          "final_code_exact": 0,
+          "approver_exact": 0,
+          "final_date_exact": 0,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-04",
+          "title": "Delta Grid Dispatch",
+          "expected": {
+            "final_code": "DELTA-ROUTE-909",
+            "approver": "Noah Finley",
+            "final_date": "July 11, 2025",
+            "constraint": "peaker unit spin-up latency under heat alerts"
+          },
+          "predicted": {
+            "final_code": "DELTA-ROUTE-909",
+            "approver": "Delta Grid Dispatch Modernization Team",
+            "final_date": "2025-07-11",
+            "constraint": "Pilot-only, historical sections only"
+          },
+          "raw_response": "{\"final_code\":\"DELTA-ROUTE-909\",\"approver\":\"Delta Grid Dispatch Modernization Team\",\"final_date\":\"2025-07-11\",\"constraint\":\"Pilot-only, historical sections only\"}",
+          "final_code_exact": 1,
+          "approver_exact": 0,
+          "final_date_exact": 0,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-05",
+          "title": "Quay Freight Ledger",
+          "expected": {
+            "final_code": "QUAY-BATCH-447",
+            "approver": "Rina Talbot",
+            "final_date": "November 6, 2025",
+            "constraint": "cross-midnight customs manifests"
+          },
+          "predicted": {
+            "final_code": "QUAY-BATCH-447",
+            "approver": "Rina Talbot",
+            "final_date": "November 6, 2025",
+            "constraint": "production"
+          },
+          "raw_response": "{\n  \"final_code\": \"QUAY-BATCH-447\",\n  \"approver\": \"Rina Talbot\",\n  \"final_date\": \"November 6, 2025\",\n  \"constraint\": \"production\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-06",
+          "title": "Pine Forest Incident Index",
+          "expected": {
+            "final_code": "PINE-INDEX-612",
+            "approver": "Gavin Chen",
+            "final_date": "June 20, 2025",
+            "constraint": "radio dead spots in canyon sectors"
+          },
+          "predicted": {
+            "final_code": "PINE-INDEX-612",
+            "approver": "Gavin Chen",
+            "final_date": "June 20, 2025",
+            "constraint": "radio dead spots in canyon sectors"
+          },
+          "raw_response": "{\n  \"final_code\": \"PINE-INDEX-612\",\n  \"approver\": \"Gavin Chen\",\n  \"final_date\": \"June 20, 2025\",\n  \"constraint\": \"radio dead spots in canyon sectors\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-07",
+          "title": "Lumen Clinic Slotting",
+          "expected": {
+            "final_code": "LUMEN-SLOT-358",
+            "approver": "Priya Nandakumar",
+            "final_date": "May 14, 2025",
+            "constraint": "insurance cutoff timestamps in local time"
+          },
+          "predicted": {
+            "final_code": "LUMEN-SLOT-358",
+            "approver": "Priya Nandakumar",
+            "final_date": "May 14, 2025",
+            "constraint": "insurance cutoff timestamps in local tim..."
+          },
+          "raw_response": "{\n  \"final_code\": \"LUMEN-SLOT-358\",\n  \"approver\": \"Priya Nandakumar\",\n  \"final_date\": \"May 14, 2025\",\n  \"constraint\": \"insurance cutoff timestamps in local tim...\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        },
+        {
+          "case_id": "case-08",
+          "title": "Crown Parcel Mapping",
+          "expected": {
+            "final_code": "CROWN-MAP-774",
+            "approver": "Luis Herrera",
+            "final_date": "December 1, 2025",
+            "constraint": "frozen-road detours in winter dispatch"
+          },
+          "predicted": {
+            "final_code": "CROWN-MAP-774",
+            "approver": "Luis Herrera",
+            "final_date": "December 1, 2025",
+            "constraint": "production"
+          },
+          "raw_response": "{\n  \"final_code\": \"CROWN-MAP-774\",\n  \"approver\": \"Luis Herrera\",\n  \"final_date\": \"December 1, 2025\",\n  \"constraint\": \"production\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-09",
+          "title": "Ridge Claims Traceability",
+          "expected": {
+            "final_code": "RIDGE-TRACE-265",
+            "approver": "Avery Bishop",
+            "final_date": "April 29, 2025",
+            "constraint": "regulatory callback windows after major storms"
+          },
+          "predicted": {
+            "final_code": "RIDGE-TRACE-265",
+            "approver": "Avery Bishop",
+            "final_date": "2025-04-13",
+            "constraint": "Must be in active runbooks"
+          },
+          "raw_response": "{\n  \"final_code\": \"RIDGE-TRACE-265\",\n  \"approver\": \"Avery Bishop\",\n  \"final_date\": \"2025-04-13\",\n  \"constraint\": \"Must be in active runbooks\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 0,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        },
+        {
+          "case_id": "case-10",
+          "title": "Tidal Queue Orchestration",
+          "expected": {
+            "final_code": "TIDAL-QUEUE-801",
+            "approver": "Sofia Alvarez",
+            "final_date": "March 19, 2025",
+            "constraint": "cold-room handoff deadlines before assay expiration"
+          },
+          "predicted": {
+            "final_code": "TIDAL-QUEUE-801",
+            "approver": "Sofia Alvarez",
+            "final_date": "March 19, 2025",
+            "constraint": "Approved-for-production"
+          },
+          "raw_response": "{\n  \"final_code\": \"TIDAL-QUEUE-801\",\n  \"approver\": \"Sofia Alvarez\",\n  \"final_date\": \"March 19, 2025\",\n  \"constraint\": \"Approved-for-production\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 0,
+          "all_fields_match": 0
+        }
+      ]
+    }
+  ]
+}

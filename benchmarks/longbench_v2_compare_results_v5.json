@@ -1,0 +1,60 @@
+{
+  "benchmark": "THUDM/LongBench-v2",
+  "task_format": "multiple-choice (A/B/C/D)",
+  "sample_size": 2,
+  "seed": 42,
+  "length_filter": [
+    "short"
+  ],
+  "difficulty_filter": [],
+  "max_context_chars": 100000,
+  "memory_model": "qwen3:0.6b",
+  "long_context_model": "qwen3:4b",
+  "memory_ctx": 2200,
+  "direct_ctx": 262144,
+  "chunk_chars": 1400,
+  "elapsed_seconds": 164.78,
+  "direct_error_count": 0,
+  "memory_error_count": 0,
+  "memory_orb_accuracy": 0.5,
+  "long_context_direct_accuracy": 0.5,
+  "delta_memory_minus_long_direct": 0.0,
+  "results": [
+    {
+      "case_id": "66f6bcf3bb02136c067c2703",
+      "length": "short",
+      "difficulty": "hard",
+      "domain": "Multi-Document QA",
+      "sub_domain": "Governmental",
+      "answer": "A",
+      "direct_raw": "{\n  \"answer\": \"A\"\n}",
+      "direct_pred": "A",
+      "direct_correct": 1,
+      "direct_error": "",
+      "memory_raw": "{\"answer\":\"A\"}",
+      "memory_pred": "A",
+      "memory_correct": 1,
+      "memory_error": "",
+      "context_chars": 56138,
+      "chunk_count": 50
+    },
+    {
+      "case_id": "66fbab85bb02136c067c81dc",
+      "length": "short",
+      "difficulty": "hard",
+      "domain": "Multi-Document QA",
+      "sub_domain": "Multi-news",
+      "answer": "C",
+      "direct_raw": "{\n  \"answer\": \"A\"\n}",
+      "direct_pred": "A",
+      "direct_correct": 0,
+      "direct_error": "",
+      "memory_raw": "{\"answer\": \"A\"}",
+      "memory_pred": "A",
+      "memory_correct": 0,
+      "memory_error": "",
+      "context_chars": 61556,
+      "chunk_count": 9
+    }
+  ]
+}

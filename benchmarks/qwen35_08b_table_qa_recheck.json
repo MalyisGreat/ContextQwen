@@ -1,0 +1,33 @@
+{
+  "benchmark": "THUDM/LongBench-v2",
+  "slice": "medium table_qa targeted recheck",
+  "model": "qwen3.5:0.8b",
+  "results": [
+    {
+      "case_id": "67039cfabb02136c067cd04e",
+      "question": "Based on the dataset provided, which of the following best reflects the underlying trend in the evolution of music genres represented in the data from 2000 to 2013, and how this trend correlates with the increasing diversity in global music consumption during this period?",
+      "answer": "C",
+      "direct_pred": "B",
+      "heuristic_pred": "B",
+      "reasoned_pred": "B",
+      "direct_raw": "{\"answer\":\"B\"}",
+      "heuristic_raw": "{\"answer\":\"B\"}",
+      "reasoned_raw": "{\"answer\":\"B\"}",
+      "heuristic_chunk_count": 3876,
+      "reasoned_chunk_count": 3876
+    },
+    {
+      "case_id": "66f95e11bb02136c067c5370",
+      "question": "Which two countries are the second and third frequently mentioned among all these organization addresses?",
+      "answer": "B",
+      "direct_pred": "B",
+      "heuristic_pred": "B",
+      "reasoned_pred": "B",
+      "direct_raw": "{\"answer\":\"B\"}",
+      "heuristic_raw": "{\"answer\": \"B\"}",
+      "reasoned_raw": "{\"answer\": \"B\"}",
+      "heuristic_chunk_count": 3492,
+      "reasoned_chunk_count": 3492
+    }
+  ]
+}

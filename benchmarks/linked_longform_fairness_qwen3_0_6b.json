@@ -1,0 +1,242 @@
+{
+  "model": "qwen3:0.6b",
+  "cases": 10,
+  "coercion_on_raw_accuracy": 1.0,
+  "coercion_on_final_accuracy": 1.0,
+  "coercion_off_raw_accuracy": 1.0,
+  "coercion_off_final_accuracy": 1.0,
+  "changed_cases_on": [],
+  "changed_cases_off": [],
+  "details": [
+    {
+      "case_id": "case-01",
+      "title": "Harborlight Cold Chain",
+      "expected": "HBR-LOCK-731",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"HBR-LOCK-731\"}",
+        "raw_model_extracted": "HBR-LOCK-731",
+        "final_engine_response": "{\"answer\":\"HBR-LOCK-731\"}",
+        "final_engine_extracted": "HBR-LOCK-731",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"HBR-LOCK-731\"}",
+        "raw_model_extracted": "HBR-LOCK-731",
+        "final_engine_response": "{\"answer\":\"HBR-LOCK-731\"}",
+        "final_engine_extracted": "HBR-LOCK-731",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-02",
+      "title": "Mesa Fare Reconciliation",
+      "expected": "MNT-FLOW-284",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"MNT-FLOW-284\"}",
+        "raw_model_extracted": "MNT-FLOW-284",
+        "final_engine_response": "{\"answer\":\"MNT-FLOW-284\"}",
+        "final_engine_extracted": "MNT-FLOW-284",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"MNT-FLOW-284\"}",
+        "raw_model_extracted": "MNT-FLOW-284",
+        "final_engine_response": "{\"answer\":\"MNT-FLOW-284\"}",
+        "final_engine_extracted": "MNT-FLOW-284",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-03",
+      "title": "Arcadia Archive Migration",
+      "expected": "ARC-NODE-553",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"ARC-NODE-553\"}",
+        "raw_model_extracted": "ARC-NODE-553",
+        "final_engine_response": "{\"answer\":\"ARC-NODE-553\"}",
+        "final_engine_extracted": "ARC-NODE-553",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"ARC-NODE-553\"}",
+        "raw_model_extracted": "ARC-NODE-553",
+        "final_engine_response": "{\"answer\":\"ARC-NODE-553\"}",
+        "final_engine_extracted": "ARC-NODE-553",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-04",
+      "title": "Delta Grid Dispatch",
+      "expected": "DELTA-ROUTE-909",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"DELTA-ROUTE-909\"}",
+        "raw_model_extracted": "DELTA-ROUTE-909",
+        "final_engine_response": "{\"answer\":\"DELTA-ROUTE-909\"}",
+        "final_engine_extracted": "DELTA-ROUTE-909",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"DELTA-ROUTE-909\"}",
+        "raw_model_extracted": "DELTA-ROUTE-909",
+        "final_engine_response": "{\"answer\":\"DELTA-ROUTE-909\"}",
+        "final_engine_extracted": "DELTA-ROUTE-909",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-05",
+      "title": "Quay Freight Ledger",
+      "expected": "QUAY-BATCH-447",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"QUAY-BATCH-447\"}",
+        "raw_model_extracted": "QUAY-BATCH-447",
+        "final_engine_response": "{\"answer\":\"QUAY-BATCH-447\"}",
+        "final_engine_extracted": "QUAY-BATCH-447",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"QUAY-BATCH-447\"}",
+        "raw_model_extracted": "QUAY-BATCH-447",
+        "final_engine_response": "{\"answer\":\"QUAY-BATCH-447\"}",
+        "final_engine_extracted": "QUAY-BATCH-447",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-06",
+      "title": "Pine Forest Incident Index",
+      "expected": "PINE-INDEX-612",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"PINE-INDEX-612\"}",
+        "raw_model_extracted": "PINE-INDEX-612",
+        "final_engine_response": "{\"answer\":\"PINE-INDEX-612\"}",
+        "final_engine_extracted": "PINE-INDEX-612",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"PINE-INDEX-612\"}",
+        "raw_model_extracted": "PINE-INDEX-612",
+        "final_engine_response": "{\"answer\":\"PINE-INDEX-612\"}",
+        "final_engine_extracted": "PINE-INDEX-612",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-07",
+      "title": "Lumen Clinic Slotting",
+      "expected": "LUMEN-SLOT-358",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"LUMEN-SLOT-358\"}",
+        "raw_model_extracted": "LUMEN-SLOT-358",
+        "final_engine_response": "{\"answer\":\"LUMEN-SLOT-358\"}",
+        "final_engine_extracted": "LUMEN-SLOT-358",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"LUMEN-SLOT-358\"}",
+        "raw_model_extracted": "LUMEN-SLOT-358",
+        "final_engine_response": "{\"answer\":\"LUMEN-SLOT-358\"}",
+        "final_engine_extracted": "LUMEN-SLOT-358",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-08",
+      "title": "Crown Parcel Mapping",
+      "expected": "CROWN-MAP-774",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"CROWN-MAP-774\"}",
+        "raw_model_extracted": "CROWN-MAP-774",
+        "final_engine_response": "{\"answer\":\"CROWN-MAP-774\"}",
+        "final_engine_extracted": "CROWN-MAP-774",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"CROWN-MAP-774\"}",
+        "raw_model_extracted": "CROWN-MAP-774",
+        "final_engine_response": "{\"answer\":\"CROWN-MAP-774\"}",
+        "final_engine_extracted": "CROWN-MAP-774",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-09",
+      "title": "Ridge Claims Traceability",
+      "expected": "RIDGE-TRACE-265",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"RIDGE-TRACE-265\"}",
+        "raw_model_extracted": "RIDGE-TRACE-265",
+        "final_engine_response": "{\"answer\":\"RIDGE-TRACE-265\"}",
+        "final_engine_extracted": "RIDGE-TRACE-265",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"RIDGE-TRACE-265\"}",
+        "raw_model_extracted": "RIDGE-TRACE-265",
+        "final_engine_response": "{\"answer\":\"RIDGE-TRACE-265\"}",
+        "final_engine_extracted": "RIDGE-TRACE-265",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    },
+    {
+      "case_id": "case-10",
+      "title": "Tidal Queue Orchestration",
+      "expected": "TIDAL-QUEUE-801",
+      "coercion_on": {
+        "raw_model_response": "{\"answer\":\"TIDAL-QUEUE-801\"}",
+        "raw_model_extracted": "TIDAL-QUEUE-801",
+        "final_engine_response": "{\"answer\":\"TIDAL-QUEUE-801\"}",
+        "final_engine_extracted": "TIDAL-QUEUE-801",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      },
+      "coercion_off": {
+        "raw_model_response": "{\"answer\":\"TIDAL-QUEUE-801\"}",
+        "raw_model_extracted": "TIDAL-QUEUE-801",
+        "final_engine_response": "{\"answer\":\"TIDAL-QUEUE-801\"}",
+        "final_engine_extracted": "TIDAL-QUEUE-801",
+        "raw_exact": 1,
+        "final_exact": 1,
+        "changed_by_engine": false
+      }
+    }
+  ]
+}

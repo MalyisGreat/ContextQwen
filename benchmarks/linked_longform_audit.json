@@ -1,0 +1,155 @@
+{
+  "cases": [
+    {
+      "case_id": "case-01",
+      "title": "Harborlight Cold Chain",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 979,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-02",
+      "title": "Mesa Fare Reconciliation",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 979,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-03",
+      "title": "Arcadia Archive Migration",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 980,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-04",
+      "title": "Delta Grid Dispatch",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 981,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-05",
+      "title": "Quay Freight Ledger",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 975,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-06",
+      "title": "Pine Forest Incident Index",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 982,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-07",
+      "title": "Lumen Clinic Slotting",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 978,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-08",
+      "title": "Crown Parcel Mapping",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 978,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-09",
+      "title": "Ridge Claims Traceability",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 979,
+        "all_pass": true
+      }
+    },
+    {
+      "case_id": "case-10",
+      "title": "Tidal Queue Orchestration",
+      "checks": {
+        "answer_in_context": true,
+        "legacy_in_context": true,
+        "pilot_in_context": true,
+        "date_in_context": true,
+        "pilot_in_question": true,
+        "date_in_question": true,
+        "answer_not_in_question": true,
+        "word_count": 977,
+        "all_pass": true
+      }
+    }
+  ],
+  "all_pass": true
+}

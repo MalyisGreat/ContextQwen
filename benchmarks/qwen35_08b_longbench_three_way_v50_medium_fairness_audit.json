@@ -1,0 +1,25 @@
+{
+  "same_model_all_arms": true,
+  "model": "qwen3.5:0.8b",
+  "benchmark_doc_ingested_as_tool_turns": true,
+  "benchmark_chunks_excluded_from_pulse_map": true,
+  "reasoned_path_disables_answer_coercion": true,
+  "reasoned_route_uses_question_only": true,
+  "answer_key_reference_lines": [
+    {
+      "line": 742,
+      "code": "direct_correct = 1 if direct_pred == case.answer else 0"
+    },
+    {
+      "line": 768,
+      "code": "memory_correct = 1 if memory_pred == case.answer else 0"
+    },
+    {
+      "line": 781,
+      "code": "answer=case.answer,"
+    }
+  ],
+  "direct_error_count": 0,
+  "heuristic_error_count": 0,
+  "reasoned_error_count": 0
+}

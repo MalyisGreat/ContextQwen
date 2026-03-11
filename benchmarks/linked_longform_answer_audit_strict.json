@@ -1,0 +1,324 @@
+{
+  "dataset_summary": {
+    "case_count": 10,
+    "avg_words_per_passage": 978.8,
+    "min_words_per_passage": 975,
+    "max_words_per_passage": 982,
+    "question_examples": [
+      "For Harborlight Cold Chain Refresh, which production control code was finally approved on September 18, 2025 after replacing HBR-LINK-384? Return the code only.",
+      "For Mesa Fare Reconciliation Upgrade, which production control code was finally approved on October 2, 2025 after replacing MNT-FLOW-246? Return the code only."
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "case-01",
+      "title": "Harborlight Cold Chain",
+      "expected": "HBR-LOCK-731",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "HBR-LOCK-731",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"HBR-LOCK-731\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "HBR-LOCK-731",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"HBR-LOCK-731\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "HBR-LOCK-731",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"HBR-LOCK-731\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "HBR-LOCK-731",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"HBR-LOCK-731\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-02",
+      "title": "Mesa Fare Reconciliation",
+      "expected": "MNT-FLOW-284",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "MNT-FLOW-284",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"MNT-FLOW-284\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "MNT-FLOW-284",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"MNT-FLOW-284\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "MNT-FLOW-284",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"MNT-FLOW-284\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "MNT-FLOW-284",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"MNT-FLOW-284\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-03",
+      "title": "Arcadia Archive Migration",
+      "expected": "ARC-NODE-553",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "ARC-NODE-553",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"ARC-NODE-553\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "ARC-NODE-553",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"ARC-NODE-553\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "ARC-NODE-553",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"ARC-NODE-553\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "ARC-NODE-553",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"ARC-NODE-553\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-04",
+      "title": "Delta Grid Dispatch",
+      "expected": "DELTA-ROUTE-909",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "DELTA-ROUTE-909",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"DELTA-ROUTE-909\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "DELTA-ROUTE-909",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"DELTA-ROUTE-909\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "DELTA-ROUTE-909",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"DELTA-ROUTE-909\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "DELTA-ROUTE-909",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"DELTA-ROUTE-909\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-05",
+      "title": "Quay Freight Ledger",
+      "expected": "QUAY-BATCH-447",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "447",
+          "exact_match": 0,
+          "reason": "suffix_only_code",
+          "raw_response": "{\"answer\":\"447\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "QUAY-BATCH-447",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"QUAY-BATCH-447\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "QUAY-BATCH-447",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"QUAY-BATCH-447\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "QUAY-BATCH-447",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"QUAY-BATCH-447\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-06",
+      "title": "Pine Forest Incident Index",
+      "expected": "PINE-INDEX-612",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "PINE-INDEX-612",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"PINE-INDEX-612\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "PINE-INDEX-612",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"PINE-INDEX-612\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "PINE-INDEX-612",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"PINE-INDEX-612\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "PINE-INDEX-612",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"PINE-INDEX-612\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-07",
+      "title": "Lumen Clinic Slotting",
+      "expected": "LUMEN-SLOT-358",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "LUMEN-SLOT-358",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"LUMEN-SLOT-358\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "LUMEN-SLOT-358",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"LUMEN-SLOT-358\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "LUMEN-SLOT-358",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"LUMEN-SLOT-358\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "LUMEN-SLOT-358",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"LUMEN-SLOT-358\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-08",
+      "title": "Crown Parcel Mapping",
+      "expected": "CROWN-MAP-774",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "CROWN-MAP-774",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"CROWN-MAP-774\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "CROWN-MAP-774",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"CROWN-MAP-774\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "CROWN-MAP-774",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"CROWN-MAP-774\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "CROWN-MAP-774",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"CROWN-MAP-774\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-09",
+      "title": "Ridge Claims Traceability",
+      "expected": "RIDGE-TRACE-265",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "265",
+          "exact_match": 0,
+          "reason": "suffix_only_code",
+          "raw_response": "{\"answer\":\"265\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "RIDGE-TRACE-265",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"RIDGE-TRACE-265\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "RIDGE-TRACE-265",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"ridge-trace-265\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "RIDGE-TRACE-265",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\": \"RIDGE-TRACE-265\"}"
+        }
+      }
+    },
+    {
+      "case_id": "case-10",
+      "title": "Tidal Queue Orchestration",
+      "expected": "TIDAL-QUEUE-801",
+      "answers": {
+        "qwen3:0.6b|direct": {
+          "predicted": "TIDAL-QUEUE-801",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"TIDAL-QUEUE-801\"}"
+        },
+        "qwen3:0.6b|memory-orb": {
+          "predicted": "TIDAL-QUEUE-801",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\"answer\":\"TIDAL-QUEUE-801\"}"
+        },
+        "qwen3:4b|direct": {
+          "predicted": "TIDAL-QUEUE-801",
+          "exact_match": 1,
+          "reason": "ok",
+          "raw_response": "{\n  \"answer\": \"TIDAL-QUEUE-801\"\n}"
+        },
+        "qwen3:4b|memory-orb": {
+          "predicted": "TIDAL-QUEUE-755",
+          "exact_match": 0,
+          "reason": "malformed_json_echoed_prompt",
+          "raw_response": "{\n  \"question\": \"For Tidal Queue Orchestration Program, which production control code was finally approved on March 19, 2025 after replacing TIDAL-QUEUE-755? Return the code only.\",\n  \"evidence\": [\n    \"pass=1 working-t-21 score=1.61: The closeout memo repeated one practical rule for future audits: only TIDAL-QUEUE-801 is considered the authoritative production control for Tidal Queue Orchestration Program. | The memo warned that references to TIDAL"
+        }
+      }
+    }
+  ]
+}

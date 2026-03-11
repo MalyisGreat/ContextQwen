@@ -1,0 +1,50 @@
+{
+  "dataset": {
+    "case_count": 1,
+    "avg_words_per_passage": 1020.0,
+    "min_words_per_passage": 1020,
+    "max_words_per_passage": 1020,
+    "question_preview": "For Harborlight Cold Chain Refresh, after replacing HBR-LINK-384 and retiring HBR-LINK-219, return JSON with keys {\"final_code\",\"approver\",\"final_date\",\"constraint\"}. Use the final approved production tuple only."
+  },
+  "runs": [
+    {
+      "model": "qwen3.5:0.8b",
+      "mode": "memory-orb",
+      "allow_post_correction": false,
+      "memory_dwell_mode": "reasoned",
+      "reasoning_dwell_ctx": 900,
+      "cases": 1,
+      "metrics": {
+        "final_code_accuracy": 1.0,
+        "approver_accuracy": 1.0,
+        "final_date_accuracy": 1.0,
+        "constraint_match_accuracy": 1.0,
+        "all_fields_exact_accuracy": 1.0
+      },
+      "results": [
+        {
+          "case_id": "case-01",
+          "title": "Harborlight Cold Chain",
+          "expected": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "predicted": {
+            "final_code": "HBR-LOCK-731",
+            "approver": "Elena Park",
+            "final_date": "September 18, 2025",
+            "constraint": "generator transfer times on storm nights"
+          },
+          "raw_response": "{\n  \"final_code\": \"HBR-LOCK-731\",\n  \"approver\": \"Elena Park\",\n  \"final_date\": \"September 18, 2025\",\n  \"constraint\": \"generator transfer times on storm nights\"\n}",
+          "final_code_exact": 1,
+          "approver_exact": 1,
+          "final_date_exact": 1,
+          "constraint_match": 1,
+          "all_fields_match": 1
+        }
+      ]
+    }
+  ]
+}
