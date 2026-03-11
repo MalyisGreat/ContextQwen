@@ -162,28 +162,32 @@ def _start_vllm_server(
     gpu_memory_utilization: float,
     max_model_len: int,
     api_key: str,
+    language_model_only: bool,
 ) -> subprocess.Popen[str]:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     handle = log_path.open("w", encoding="utf-8")
+    command = [
+        "vllm",
+        "serve",
+        model_id,
+        "--host",
+        "127.0.0.1",
+        "--port",
+        str(port),
+        "--api-key",
+        api_key or "EMPTY",
+        "--tensor-parallel-size",
+        str(max(1, tensor_parallel_size)),
+        "--gpu-memory-utilization",
+        str(gpu_memory_utilization),
+        "--max-model-len",
+        str(max(4096, max_model_len)),
+        "--disable-log-stats",
+    ]
+    if language_model_only:
+        command.append("--language-model-only")
     process = subprocess.Popen(
-        [
-            "vllm",
-            "serve",
-            model_id,
-            "--host",
-            "127.0.0.1",
-            "--port",
-            str(port),
-            "--api-key",
-            api_key or "EMPTY",
-            "--tensor-parallel-size",
-            str(max(1, tensor_parallel_size)),
-            "--gpu-memory-utilization",
-            str(gpu_memory_utilization),
-            "--max-model-len",
-            str(max(4096, max_model_len)),
-            "--disable-log-stats",
-        ],
+        command,
         cwd=str(workdir),
         env=env,
         stdout=handle,
@@ -238,6 +242,7 @@ def main() -> None:
     parser.add_argument("--vllm-tensor-parallel-size", type=int, default=1)
     parser.add_argument("--vllm-gpu-memory-utilization", type=float, default=0.95)
     parser.add_argument("--vllm-max-model-len", type=int, default=262144)
+    parser.add_argument("--vllm-language-model-only", action="store_true")
     parser.add_argument("--cuda-visible-devices", type=str, default="")
     parser.add_argument("--extra-model", action="append", default=[], help="Additional Ollama models to pull before running.")
     parser.add_argument("--enable-ollama-think", action="store_true")
@@ -301,6 +306,7 @@ def main() -> None:
         "vllm_tensor_parallel_size": args.vllm_tensor_parallel_size,
         "vllm_gpu_memory_utilization": args.vllm_gpu_memory_utilization,
         "vllm_max_model_len": args.vllm_max_model_len,
+        "vllm_language_model_only": bool(args.vllm_language_model_only),
         "run_mrcr": bool(args.run_mrcr),
         "mrcr_needles": args.mrcr_needles,
         "cuda_visible_devices": args.cuda_visible_devices,
@@ -334,6 +340,7 @@ def main() -> None:
                     gpu_memory_utilization=args.vllm_gpu_memory_utilization,
                     max_model_len=max(args.vllm_max_model_len, args.direct_ctx),
                     api_key=args.api_key,
+                    language_model_only=args.vllm_language_model_only,
                 )
                 _wait_for_openai_compatible(
                     args.api_base,
