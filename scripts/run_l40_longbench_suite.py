@@ -13,6 +13,15 @@ from urllib.request import Request
 from urllib.request import urlopen
 
 
+def _tail_text(path: Path, max_lines: int = 60) -> str:
+    if not path.exists():
+        return ""
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    if not lines:
+        return ""
+    return "\n".join(lines[-max_lines:])
+
+
 def _run_and_tee(command: list[str], cwd: Path, env: dict[str, str], log_path: Path) -> int:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     with log_path.open("w", encoding="utf-8") as handle:
@@ -50,11 +59,24 @@ def _wait_for_ollama(timeout_s: int = 60) -> None:
     raise RuntimeError(f"Ollama did not become ready within {timeout_s}s: {last_error}")
 
 
-def _wait_for_openai_compatible(api_base: str, timeout_s: int = 90) -> None:
+def _wait_for_openai_compatible(
+    api_base: str,
+    timeout_s: int = 90,
+    process: subprocess.Popen[str] | None = None,
+    log_path: Path | None = None,
+) -> None:
     deadline = time.time() + timeout_s
     request = Request(api_base.rstrip("/") + "/models", method="GET")
     last_error = ""
     while time.time() < deadline:
+        if process is not None and process.poll() is not None:
+            details = ""
+            if log_path is not None:
+                details = _tail_text(log_path)
+            suffix = f"\n\nLast server log lines:\n{details}" if details else ""
+            raise RuntimeError(
+                f"OpenAI-compatible server exited before becoming ready with code {process.returncode}.{suffix}"
+            )
         try:
             with urlopen(request, timeout=5) as response:
                 if response.status == 200:
@@ -64,7 +86,11 @@ def _wait_for_openai_compatible(api_base: str, timeout_s: int = 90) -> None:
         except Exception as err:  # pragma: no cover - operational guard
             last_error = str(err)
         time.sleep(1.0)
-    raise RuntimeError(f"OpenAI-compatible server did not become ready within {timeout_s}s: {last_error}")
+    details = ""
+    if log_path is not None:
+        details = _tail_text(log_path)
+    suffix = f"\n\nLast server log lines:\n{details}" if details else ""
+    raise RuntimeError(f"OpenAI-compatible server did not become ready within {timeout_s}s: {last_error}{suffix}")
 
 
 def _warm_model(model: str, keep_alive: str, timeout_s: int = 120) -> None:
@@ -309,7 +335,12 @@ def main() -> None:
                     max_model_len=max(args.vllm_max_model_len, args.direct_ctx),
                     api_key=args.api_key,
                 )
-                _wait_for_openai_compatible(args.api_base, timeout_s=180)
+                _wait_for_openai_compatible(
+                    args.api_base,
+                    timeout_s=180,
+                    process=server_process,
+                    log_path=run_dir / "vllm-server.log",
+                )
         elif provider != "ollama":
             effective_model = args.hf_model_id or args.model
 

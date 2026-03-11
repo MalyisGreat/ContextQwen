@@ -189,6 +189,8 @@ python scripts/run_l40_longbench_suite.py --model qwen3.5:0.8b --sample-size 50 
 vLLM path:
 
 ```bash
+pip install uv
+uv pip install vllm --torch-backend=auto --extra-index-url https://wheels.vllm.ai/nightly
 python scripts/run_l40_longbench_suite.py --backend-provider openai --model Qwen/Qwen3.5-0.8B --hf-model-id Qwen/Qwen3.5-0.8B --api-base http://127.0.0.1:8000/v1 --api-key EMPTY --sample-size 50 --lengths medium --run-mrcr
 ```
 
